@@ -45,3 +45,13 @@ Demo of the Dapr Workflow building block in a retail context.
     ```bash
     curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/1234/status
     ```
+
+## Resources
+
+1. [Dapr Workflow overview](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/).
+2. [How to: Author and manage Dapr Workflow in the .NET SDK](https://docs.dapr.io/developing-applications/sdks/dotnet/dotnet-workflow/dotnet-workflow-howto/)
+
+## More information
+
+Any questions or comments about this sample? Join the [Dapr discord](https://bit.ly/dapr-discord) and post a message the `#workflow` channel.
+Have you made something with Dapr? Post a message in the `#show-and-tell` channel, we love to see your creations!
