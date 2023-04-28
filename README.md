@@ -46,6 +46,8 @@ Demo of the Dapr Workflow building block in a retail context.
     curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/1234/status
     ```
 
+6. Inspect the orchestrator logs in ZipKin: `http://localhost:9411/zipkin/`.
+
 ## Resources
 
 1. [Dapr Workflow overview](https://docs.dapr.io/developing-applications/building-blocks/workflow/workflow-overview/).
