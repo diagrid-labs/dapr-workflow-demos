@@ -25,14 +25,16 @@ Demo of the Dapr Workflow building block in a retail context.
     curl -X GET http://localhost:5064/stock/restock
     ```
 
-4. Start the workflow:
+4. Start the workflow via the Workflow HTTP API:
 
    ```bash
    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/1234/start \
      -H "Content-Type: application/json" \
      -d '{ "input" : {"Name": "Paperclips", "TotalCost": 99.95, "Quantity": 1}}'
 
-5. Check the workflow status:
+> Note that `1234` in the URL is the workflow instance ID.
+
+5. Check the workflow status via Workflow HTTP API:
 
     ```bash
     curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/1234/status
