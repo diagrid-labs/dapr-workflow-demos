@@ -2,6 +2,11 @@
 
 Demo of the Dapr Workflow building block in a retail context.
 
+## Prerequisites
+
+1. [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
+2. [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
+
 ## Run the Workflow App
 
 1. Change to the Retail directory and build the ASP.NET app:
