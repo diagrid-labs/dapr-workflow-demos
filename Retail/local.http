@@ -5,7 +5,8 @@ GET {{app_url}}/stock/restock
 
 ### Run workflow
 @dapr_url=http://localhost:3500 
-POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/1234/start
+@workflow_id=12345
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/{{workflow_id}}/start
 Content-Type: application/json
 
 {
@@ -14,4 +15,4 @@ Content-Type: application/json
 
 ### Get status
 
-GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/1234
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/{{workflow_id}}
