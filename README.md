@@ -1,6 +1,29 @@
 # Dapr Workflow Retail Demo
 
-Demo of the Dapr Workflow building block in a retail context.
+Demo of the Dapr Workflow building block in an order processing retail context.
+
+```mermaid
+graph TD
+    A[Start]
+    B[NotifyActivity]
+    C[CheckInventoryActivity]
+    X{Sufficient Inventory?}
+    D[ProcessPaymentActivity]
+    E[UpdateInventoryActivity]
+    F[RefundPaymentActivity]
+    BB[NotifyActivity]
+    BBB[NotifyActivity]
+    XX{Sufficient Inventory?}
+    Z[End]
+    A --> B --> C
+    C --> X
+    X -->|Yes| D
+    X -->|No - Processed:false| Z
+    D --> E --> XX
+    XX -->|Yes| BB --> |Processed:true| Z
+    XX -->|No| BBB --> F --> |Processed:false| Z
+
+```
 
 ## Prerequisites
 
