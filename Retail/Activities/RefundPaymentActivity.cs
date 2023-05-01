@@ -3,29 +3,29 @@ using WorkflowSample.Models;
 
 namespace WorkflowSample.Activities
 {
-    public class ProcessPaymentActivity : WorkflowActivity<PaymentRequest, object?>
+    public class RefundPaymentActivity : WorkflowActivity<PaymentRequest, object?>
     {
         readonly ILogger _logger;
 
-        public ProcessPaymentActivity(ILoggerFactory loggerFactory)
+        public RefundPaymentActivity(ILoggerFactory loggerFactory)
         {
-            _logger = loggerFactory.CreateLogger<ProcessPaymentActivity>();
+            _logger = loggerFactory.CreateLogger<RefundPaymentActivity>();
         }
 
         public override async Task<object?> RunAsync(WorkflowActivityContext context, PaymentRequest req)
         {
             _logger.LogInformation(
-                "Processing payment: {requestId} for {amount} {item} at ${currency}",
+                "Refunding payment: {requestId} for {amount} {item} at ${currency}",
                 req.RequestId,
                 req.Amount,
                 req.ItemName,
                 req.Currency);
 
             // Simulate slow processing
-            await Task.Delay(TimeSpan.FromSeconds(5));
+            await Task.Delay(TimeSpan.FromSeconds(2));
 
             _logger.LogInformation(
-                "Payment for request ID '{requestId}' processed successfully",
+                "Payment for request ID '{requestId}' refunded successfully",
                 req.RequestId);
 
             return null;

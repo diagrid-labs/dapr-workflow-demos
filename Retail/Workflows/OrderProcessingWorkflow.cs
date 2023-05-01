@@ -14,50 +14,52 @@ namespace WorkflowSample.Workflows
             // Notify the user that an order has come through
             await context.CallActivityAsync(
                 nameof(NotifyActivity),
-                new Notification($"Received order {orderId} for {order.Quantity} {order.Name} at ${order.TotalCost}"));
+                new Notification($"Received order {orderId} for {order.Quantity} {order.Name}"));
 
             // Determine if there is enough of the item available for purchase by checking the inventory
-            InventoryResult result = await context.CallActivityAsync<InventoryResult>(
-                nameof(ReserveInventoryActivity),
+            InventoryResult inventoryResult = await context.CallActivityAsync<InventoryResult>(
+                nameof(CheckInventoryActivity),
                 new InventoryRequest(RequestId: orderId, order.Name, order.Quantity));
 
             // If there is insufficient inventory, fail and let the user know 
-            if (!result.Success)
+            if (!inventoryResult.Success)
             {
                 // End the workflow here since we don't have sufficient inventory
                 await context.CallActivityAsync(
                     nameof(NotifyActivity),
                     new Notification($"Insufficient inventory for {order.Name}"));
+                context.SetCustomStatus("Stopped order process due to insufficient inventory.");
+
                 return new OrderResult(Processed: false);
             }
 
-            // There is enough inventory available so the user can purchase the item(s). Process their payment
             await context.CallActivityAsync(
                 nameof(ProcessPaymentActivity),
-                new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, order.TotalCost));
+                new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, inventoryResult.TotalCost));
 
             try
             {
-                // There is enough inventory available so the user can purchase the item(s). Process their payment
                 await context.CallActivityAsync(
                     nameof(UpdateInventoryActivity),
-                    new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, order.TotalCost));
+                    new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, inventoryResult.TotalCost));
             }
             catch (TaskFailedException)
             {
-                // Let them know their payment was processed
+                context.SetCustomStatus("Stopped order process due to error in inventory update.");
                 await context.CallActivityAsync(
                     nameof(NotifyActivity),
                     new Notification($"Order {orderId} Failed! You are now getting a refund"));
+                await context.CallActivityAsync(
+                    nameof(RefundPaymentActivity),
+                    new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, inventoryResult.TotalCost));
+
                 return new OrderResult(Processed: false);
             }
 
-            // Let them know their payment was processed
             await context.CallActivityAsync(
                 nameof(NotifyActivity),
                 new Notification($"Order {orderId} has completed!"));
 
-            // End the workflow with a success result
             return new OrderResult(Processed: true);
         }
     }

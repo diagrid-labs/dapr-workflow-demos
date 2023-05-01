@@ -14,8 +14,9 @@ builder.Services.AddDaprWorkflow(options =>
 
     // These are the activities that get invoked by the workflow(s).
     options.RegisterActivity<NotifyActivity>();
-    options.RegisterActivity<ReserveInventoryActivity>();
+    options.RegisterActivity<CheckInventoryActivity>();
     options.RegisterActivity<ProcessPaymentActivity>();
+    options.RegisterActivity<RefundPaymentActivity>();
     options.RegisterActivity<UpdateInventoryActivity>();
 });
 

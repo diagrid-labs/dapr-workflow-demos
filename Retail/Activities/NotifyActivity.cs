@@ -6,16 +6,16 @@ namespace WorkflowSample.Activities
 
     public class NotifyActivity : WorkflowActivity<Notification, object?>
     {
-        readonly ILogger logger;
+        readonly ILogger _logger;
 
         public NotifyActivity(ILoggerFactory loggerFactory)
         {
-            this.logger = loggerFactory.CreateLogger<NotifyActivity>();
+            _logger = loggerFactory.CreateLogger<NotifyActivity>();
         }
 
         public override Task<object?> RunAsync(WorkflowActivityContext context, Notification notification)
         {
-            this.logger.LogInformation(notification.Message);
+            _logger.LogInformation(notification.Message);
 
             return Task.FromResult<object?>(null);
         }

@@ -1,18 +1,26 @@
-### Restock
 @app_url=http://localhost:5064
 
-GET {{app_url}}/stock/restock
+### Get inventory
+GET {{app_url}}/stock
+
+### Clear inventory
+DELETE {{app_url}}/stock
+
+### Restock inventory
+POST {{app_url}}/stock/restock
 
 ### Run workflow
 @dapr_url=http://localhost:3500 
-@workflow_id=12345
+@workflow_id={{$guid}}
+
+// @name wfrequest
 POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/{{workflow_id}}/start
 Content-Type: application/json
 
 {
-    "input" : {"Name": "Paperclips", "TotalCost": 99.95, "Quantity": 1}
+    "input" : {"Name": "Paperclips", "Quantity": 100}
 }
 
 ### Get status
-
-GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/{{workflow_id}}
+@workflow_id_response={{wfrequest.response.body.instance_id}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/{{workflow_id_response}}

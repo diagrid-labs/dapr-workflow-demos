@@ -4,28 +4,28 @@ using WorkflowSample.Models;
 
 namespace WorkflowSample.Activities
 {
-    public class ReserveInventoryActivity : WorkflowActivity<InventoryRequest, InventoryResult>
+    public class CheckInventoryActivity : WorkflowActivity<InventoryRequest, InventoryResult>
     {
-        readonly ILogger logger;
-        readonly DaprClient client;
+        readonly ILogger _logger;
+        readonly DaprClient _client;
         static readonly string storeName = "statestore";
 
-        public ReserveInventoryActivity(ILoggerFactory loggerFactory, DaprClient client)
+        public CheckInventoryActivity(ILoggerFactory loggerFactory, DaprClient client)
         {
-            this.logger = loggerFactory.CreateLogger<ReserveInventoryActivity>();
-            this.client = client;
+            _logger = loggerFactory.CreateLogger<CheckInventoryActivity>();
+            _client = client;
         }
 
         public override async Task<InventoryResult> RunAsync(WorkflowActivityContext context, InventoryRequest req)
         {
-            this.logger.LogInformation(
-                "Reserving inventory for order '{requestId}' of {quantity} {name}",
+            _logger.LogInformation(
+                "Checking inventory for order '{requestId}' of {quantity} {name}",
                 req.RequestId,
                 req.Quantity,
                 req.ItemName);
 
             // Ensure that the store has items
-            InventoryItem item = await client.GetStateAsync<InventoryItem>(
+            InventoryItem item = await _client.GetStateAsync<InventoryItem>(
                 storeName,
                 req.ItemName.ToLowerInvariant());
 
@@ -33,10 +33,10 @@ namespace WorkflowSample.Activities
             if (item == null)
             {
                 // Not enough items.
-                return new InventoryResult(false, null);
+                return new InventoryResult(false, null, 0);
             }
 
-            this.logger.LogInformation(
+            _logger.LogInformation(
                 "There are {quantity} {name} available for purchase",
                 item.Quantity,
                 item.Name);
@@ -46,12 +46,12 @@ namespace WorkflowSample.Activities
             {
                 // Simulate slow processing
                 await Task.Delay(TimeSpan.FromSeconds(2));
-
-                return new InventoryResult(true, item);
+                var totalCost = item.PerItemCost * req.Quantity;
+                return new InventoryResult(true, item, totalCost);
             }
 
             // Not enough items.
-            return new InventoryResult(false, item);
+            return new InventoryResult(false, item, 0);
 
         }
     }
