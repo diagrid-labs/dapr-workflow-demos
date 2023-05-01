@@ -2,6 +2,17 @@
 
 Demo of the Dapr Workflow building block in an order processing retail context.
 
+## Prerequisites
+
+1. [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
+2. [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
+
+## Hello World Workflow Sample
+
+### Run the HelloWorldWOrkflowSample app
+
+## Retail Workflow Sample
+
 ```mermaid
 graph TD
     A[Start]
@@ -22,15 +33,9 @@ graph TD
     D --> E --> XX
     XX -->|Yes| BB --> |Processed:true| Z
     XX -->|No| BBB --> F --> |Processed:false| Z
-
 ```
 
-## Prerequisites
-
-1. [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
-2. [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
-
-## Run the Workflow App
+### Run the RetailWorkflowSample app
 
 1. Change to the Retail directory and build the ASP.NET app:
 

@@ -1,0 +1,17 @@
+@app_url=http://localhost:5064
+
+### Run workflow
+@dapr_url=http://localhost:3500 
+@workflow_id={{$guid}}
+
+// @name wfrequest
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/{{workflow_id}}/start
+Content-Type: application/json
+
+{
+    "input" : "Marc"
+}
+
+### Get status
+@workflow_id_response={{wfrequest.response.body.instance_id}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/{{workflow_id_response}}
