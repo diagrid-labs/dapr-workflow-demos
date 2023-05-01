@@ -1,6 +1,6 @@
 using Dapr.Workflow;
 
-namespace WorkflowSample.Activities
+namespace HelloWorldWorkflowSample
 {
     public class CreateGreetingActivity : WorkflowActivity<string, string>
     {

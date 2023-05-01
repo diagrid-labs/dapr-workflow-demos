@@ -1,4 +1,4 @@
-@app_url=http://localhost:5064
+@app_url=http://localhost:5065
 
 ### Run workflow
 @dapr_url=http://localhost:3500 

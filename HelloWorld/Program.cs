@@ -1,6 +1,5 @@
 using Dapr.Workflow;
-using WorkflowSample.Activities;
-using WorkflowSample.Workflows;
+using HelloWorldWorkflowSample;
 
 var builder = WebApplication.CreateBuilder(args);
 

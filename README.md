@@ -9,9 +9,85 @@ Demo of the Dapr Workflow building block in an order processing retail context.
 
 ## Hello World Workflow Sample
 
-### Run the HelloWorldWOrkflowSample app
+The Hello World Workflow sample is a very basic workflow with just one activity that returns a random greeting. The workflow takes a name as input and returns a greeting with the name as output.
+
+```mermaid
+graph TD
+    A[Start]
+    B[CreateGreetingActivity]
+    C[End]
+    A -->|"input: {name}"| B -->|"output: Hi {name}"| C
+```
+
+### Run the HelloWorldWorkflowSample app
+
+1. Change to the HelloWorld directory and build the ASP.NET app:
+
+    ```bash
+    cd HelloWorld
+    dotnet build
+    ```
+
+2. Run the app using the Dapr CLI:
+
+    ```bash
+    dapr run --app-id hello-world --app-port 5065 --dapr-http-port 3500 dotnet run
+    ```
+
+    > Ensure the --app-port is the same as the port specified in the launchSettings.json file.
+
+3. Start the `HelloWorldWorkflow` via the Workflow HTTP API:
+
+   ```bash
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/1234a/start \
+     -H "Content-Type: application/json" \
+     -d '{ "input" : "Marc"}'
+    ```
+
+    > Note that `1234a` in the URL is the workflow instance ID. This can be any string you want.
+
+    Expected result:
+
+    ```json
+    {
+        "instance_id": "<WORKFLOW_ID>"
+    }
+    ```
+
+4. Check the workflow status via Workflow HTTP API:
+
+    ```bash
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/1234a/status
+    ```
+
+    Expected result:
+
+    ```json
+    {
+        "WFInfo": {
+            "instance_id": "<WORKFLOW_ID>"
+        },
+        "start_time": "2023-05-01T12:15:45Z",
+        "metadata": {
+            "dapr.workflow.custom_status": "",
+            "dapr.workflow.input": "\"Marc"\",
+            "dapr.workflow.last_updated": "2023-05-01T12:15:45Z",
+            "dapr.workflow.name": "HelloWorldWorkflow",
+            "dapr.workflow.output": "\"Hi Marc"\",
+            "dapr.workflow.runtime_status": "COMPLETED"
+        }
+    }
+    ```
 
 ## Retail Workflow Sample
+
+The Retail Workflow sample is a workflow that processes an order. The workflow takes an order payload as input and returns an order result as output. The workflow uses these activities:
+
+- `NotifyActivity`: Notifies the customer of the progress of the order.
+- `CheckInventoryActivity`: Checks if the inventory is sufficient.
+- `ProcessPaymentActivity`: Processes the payment.
+- `UpdateInventoryActivity`: Updates the inventory after checking it again.
+- `RefundPaymentActivity`: Refunds the payment if the `UpdateInventoryActivity` throws an exception.
 
 ```mermaid
 graph TD
@@ -26,13 +102,13 @@ graph TD
     BBB[NotifyActivity]
     XX{Sufficient Inventory?}
     Z[End]
-    A --> B --> C
+    A --> |OrderPayload| B --> C
     C --> X
     X -->|Yes| D
-    X -->|No - Processed:false| Z
+    X -->|"No - OrderResult(Processed:false)"| Z
     D --> E --> XX
-    XX -->|Yes| BB --> |Processed:true| Z
-    XX -->|No| BBB --> F --> |Processed:false| Z
+    XX -->|Yes| BB --> |"OrderResult(Processed:true)"| Z
+    XX -->|No| BBB --> F --> |"OrderResult(Processed:false)"| Z
 ```
 
 ### Run the RetailWorkflowSample app
