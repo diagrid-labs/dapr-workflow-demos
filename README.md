@@ -100,6 +100,7 @@ graph TD
             "dapr.workflow.runtime_status": "COMPLETED"
         }
     }
+    ```
 
     > Depending on how quick the status is retrieved after starting the workflow, the `dapr.workflow.runtime_status` could still be `"RUNNING"`. Repeat the GET status request until the status is `"COMPLETED"`.
 
