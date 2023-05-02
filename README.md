@@ -6,6 +6,9 @@ Demo of the Dapr Workflow building block in an order processing retail context.
 
 1. [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
 2. [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
+3. A REST client, such as [cURL](https://curl.se/), or the VSCode [REST client extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client).
+
+    > The VSCode REST client is configured as a recommended extension when opening this repo in VSCode.
 
 ## Hello world workflow sample
 
