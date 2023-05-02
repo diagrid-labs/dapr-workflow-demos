@@ -240,7 +240,7 @@ graph TD
     }
     ```
 
-9. Inspect the logs in ZipKin: [`localhost:9411/zipkin/`](http://localhost:9411/zipkin/`). Find the entry marked `order-processor:create_orchestration||orderprocessingworkflow` and show the details. You'll now see a timeline of the workflow at the top, and the activities underneath.
+9. Inspect the logs in ZipKin: [`localhost:9411/zipkin`](http://localhost:9411/zipkin). Find the entry marked `order-processor:create_orchestration||orderprocessingworkflow` and show the details. You'll now see a timeline of the workflow at the top, and the activities underneath.
 
     ![Order processor in Zipkin](images/order-processor_zipkin.png)
 
