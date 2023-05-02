@@ -1,4 +1,4 @@
-# Dapr Workflow Retail Demo
+# Dapr workflow samples
 
 Demo of the Dapr Workflow building block in an order processing retail context.
 
@@ -7,7 +7,7 @@ Demo of the Dapr Workflow building block in an order processing retail context.
 1. [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
 2. [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
 
-## Hello World Workflow Sample
+## Hello world workflow sample
 
 The Hello World Workflow sample is a very basic workflow with just one activity that returns a random greeting. The workflow takes a name as input and returns a greeting with the name as output.
 
@@ -79,7 +79,7 @@ graph TD
     }
     ```
 
-## Retail Workflow Sample
+## Retail workflow sample
 
 The Retail Workflow sample is a workflow that processes an order. The workflow takes an order payload as input and returns an order result as output. The workflow uses these activities:
 
@@ -158,6 +158,8 @@ graph TD
     }
     ```
 
+    > Pay attention to the console output. A message will appear that indicates the inventory is insufficient.
+
 5. Check the workflow status via Workflow HTTP API:
 
     ```bash
@@ -202,6 +204,16 @@ graph TD
     ```
 
     > Note that `1234b` in the URL is the workflow instance ID. This can be any string you want.
+
+    Expected result:
+
+    ```json
+    {
+        "instance_id": "<WORKFLOW_ID>"
+    }
+    ```
+
+    > Pay attention to the console output. Messages will appear that indicate the inventory is sufficient and payment has been processed successfully.
 
 8. Check the workflow status via Workflow HTTP API:
 
