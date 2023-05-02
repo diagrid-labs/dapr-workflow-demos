@@ -111,7 +111,7 @@ graph TD
     XX -->|No| BBB --> F --> |"OrderResult(Processed:false)"| Z
 ```
 
-The `CheckInventoryActivity` and `UpdateInventoryActivity` classes use Dapr's state management building block to store the inventory in a Redis state store.
+The `CheckInventoryActivity` and `UpdateInventoryActivity` classes use Dapr's state management building block to manage the inventory in a Redis state store.
 
 Next to the workflow, this application has an `InventoryController` with the following endpoints:
 
