@@ -41,18 +41,18 @@ namespace WorkflowSample.Activities
                 item.Quantity,
                 item.Name);
 
+            var totalCost = item.PerItemCost * req.Quantity;
             // See if there're enough items to purchase
             if (item.Quantity >= req.Quantity)
             {
                 // Simulate slow processing
                 await Task.Delay(TimeSpan.FromSeconds(2));
-                var totalCost = item.PerItemCost * req.Quantity;
+                
                 return new InventoryResult(true, item, totalCost);
             }
 
             // Not enough items.
-            return new InventoryResult(false, item, 0);
-
+            return new InventoryResult(false, item, totalCost);
         }
     }
 }

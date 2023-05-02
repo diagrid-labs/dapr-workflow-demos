@@ -36,7 +36,7 @@ graph TD
 
     > Ensure the --app-port is the same as the port specified in the launchSettings.json file.
 
-3. Start the `HelloWorldWorkflow` via the Workflow HTTP API:
+3. Start the `HelloWorldWorkflow` via the Workflow HTTP API using cURL or use the [helloworld.http](HelloWorld/helloworld.http) file if you're using VSCode with the REST client):
 
    ```bash
    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/1234a/start \
@@ -128,7 +128,7 @@ graph TD
 
     > Ensure the --app-port is the same as the port specified in the launchSettings.json file.
 
-3. Check the inventory using cURL or use the [local.http](Retail/local.http) file if you're using VSCode with the REST client):
+3. Check the inventory using cURL or use the [retail.http](Retail/retail.http) file if you're using VSCode with the REST client):
 
     ```bash
     curl -X POST http://localhost:5064/stock/restock

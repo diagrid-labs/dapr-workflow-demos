@@ -36,6 +36,20 @@
                 "${workspaceFolder}/Retail/RetailWorkflowSample.csproj"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "appId": "order-processor",
+            "appPort": 5064,
+            "httpPort": 3500,
+            "grpcPort": 50000,
+            "label": "dapr-debug",
+            "type": "dapr",
+            "dependsOn": "build"
+        },
+        {
+            "appId": "order-processor",
+            "label": "daprd-down",
+            "type": "daprd-down"
         }
     ]
 }

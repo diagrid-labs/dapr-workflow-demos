@@ -1,5 +1,6 @@
 using Dapr.Workflow;
 using DurableTask.Core.Exceptions;
+
 using WorkflowSample.Activities;
 using WorkflowSample.Models;
 
@@ -43,8 +44,19 @@ namespace WorkflowSample.Workflows
                     nameof(UpdateInventoryActivity),
                     new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, inventoryResult.TotalCost));
             }
-            catch (TaskFailedException)
+            catch (Exception ex)
             {
+                if (ex.InnerException is TaskFailedException)
+                {
+                    await context.CallActivityAsync(
+                        nameof(NotifyActivity),
+                        new Notification($"Order {orderId} Failed! You are now getting a refund"));
+                    await context.CallActivityAsync(
+                        nameof(RefundPaymentActivity),
+                        new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, inventoryResult.TotalCost));
+
+                    return new OrderResult(Processed: false);
+                }
                 context.SetCustomStatus("Stopped order process due to error in inventory update.");
                 await context.CallActivityAsync(
                     nameof(NotifyActivity),
