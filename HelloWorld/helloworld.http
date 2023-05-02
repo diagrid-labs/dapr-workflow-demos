@@ -1,5 +1,3 @@
-@app_url=http://localhost:5065
-
 ### Run workflow
 @dapr_url=http://localhost:3500 
 @workflow_id={{$guid}}
