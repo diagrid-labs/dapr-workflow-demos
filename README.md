@@ -137,7 +137,7 @@ graph TD
     If the quantity of the items is not 0, clear the inventory by running:
 
     ```bash
-    curl -X POST http://localhost:5064/stock/clear`.
+    curl -X POST http://localhost:5064/stock/clear
     ```
 
 4. Try ordering 100 paperclips while the inventory is not sufficient. Start the `OrderProcessingWorkflow` via the Workflow HTTP API:
