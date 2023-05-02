@@ -144,13 +144,13 @@ The `InventoryController` also uses Dapr's state management building block.
 3. Check the inventory using cURL, or use the [retail.http](Retail/retail.http) file if you're using VSCode with the REST client:
 
     ```bash
-    curl -X POST http://localhost:5064/stock/restock
+    curl -X POST http://localhost:5064/inventory/restock
     ```
 
     If the quantity of the items is not 0, clear the inventory by running:
 
     ```bash
-    curl -X POST http://localhost:5064/stock/clear
+    curl -X POST http://localhost:5064/inventory/clear
     ```
 
 4. Try ordering 100 paperclips while the inventory is not sufficient. Start the `OrderProcessingWorkflow` via the Workflow HTTP API:
@@ -203,7 +203,7 @@ The `InventoryController` also uses Dapr's state management building block.
 6. Restock the inventory:
 
     ```bash
-    curl -X POST http://localhost:5064/stock/restock
+    curl -X POST http://localhost:5064/inventory/restock
     ```
 
     Expected result: `HTTP 200 OK`
