@@ -1,6 +1,6 @@
-# Dapr workflow samples
+# Dapr workflow demos
 
-Demo of the Dapr Workflow building block in an order processing retail context.
+Demos applications that use the Dapr Workflow building block.
 
 ## Prerequisites
 
