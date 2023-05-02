@@ -54,18 +54,10 @@ namespace WorkflowSample.Workflows
                     await context.CallActivityAsync(
                         nameof(RefundPaymentActivity),
                         new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, inventoryResult.TotalCost));
+                    context.SetCustomStatus("Stopped order process due to error in inventory update.");
 
                     return new OrderResult(Processed: false);
                 }
-                context.SetCustomStatus("Stopped order process due to error in inventory update.");
-                await context.CallActivityAsync(
-                    nameof(NotifyActivity),
-                    new Notification($"Order {orderId} Failed! You are now getting a refund"));
-                await context.CallActivityAsync(
-                    nameof(RefundPaymentActivity),
-                    new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, inventoryResult.TotalCost));
-
-                return new OrderResult(Processed: false);
             }
 
             await context.CallActivityAsync(
