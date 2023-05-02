@@ -111,6 +111,16 @@ graph TD
     XX -->|No| BBB --> F --> |"OrderResult(Processed:false)"| Z
 ```
 
+The `CheckInventoryActivity` and `UpdateInventoryActivity` classes use Dapr's state management building block to store the inventory in a Redis state store.
+
+Next to the workflow, this application has an `InventoryController` with the following endpoints:
+
+- `GET http://localhost:5064/inventory`: retrieves the inventory
+- `DELETE http://localhost:5064/inventory`: clears the inventory
+- `POST http://localhost:5064/inventory/restock`: restocks the inventory
+
+The `InventoryController` also uses Dapr's state management building block.
+
 ### Run the RetailWorkflowSample app
 
 1. Change to the Retail directory and build the ASP.NET app:

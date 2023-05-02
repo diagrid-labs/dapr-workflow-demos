@@ -1,13 +1,13 @@
 @app_url=http://localhost:5064
 
 ### Get inventory
-GET {{app_url}}/stock
+GET {{app_url}}/inventory
 
 ### Clear inventory
-DELETE {{app_url}}/stock
+DELETE {{app_url}}/inventory
 
 ### Restock inventory
-POST {{app_url}}/stock/restock
+POST {{app_url}}/inventory/restock
 
 ### Run workflow
 @dapr_url=http://localhost:3500 

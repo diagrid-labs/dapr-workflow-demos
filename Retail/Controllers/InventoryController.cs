@@ -6,14 +6,14 @@ namespace WorkflowSample.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class StockController : ControllerBase
+public class InventoryController : ControllerBase
 {
-    private readonly ILogger<StockController> _logger;
+    private readonly ILogger<InventoryController> _logger;
     private readonly DaprClient _client;
     private static readonly string storeName = "statestore";
     private readonly static string[] itemKeys = new [] {"Paperclips", "Cars", "Computers"};
 
-    public StockController(ILogger<StockController> logger, DaprClient client)
+    public InventoryController(ILogger<InventoryController> logger, DaprClient client)
     {
         _logger = logger;
         _client = client;
