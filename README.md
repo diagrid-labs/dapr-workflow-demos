@@ -161,9 +161,9 @@ graph TD
     B3[CreateGreetingActivity]
     C([Task.WhenAll & string.Join])
     D[End]
-    A -->|"input: {name}"| B1 -->|"output/input: Hi {name}"| C
-    A -->|"input: {name}"| B2 -->|"output/input: Hola {name}"| C
-    A -->|"input: {name}"| B3 -->|"output/input: Guten tag {name}"| C
+    A -->|"input: {name}"| B1 -->|"output: Hi {name}"| C
+    A -->|"input: {name}"| B2 -->|"output: Hola {name}"| C
+    A -->|"input: {name}"| B3 -->|"output: Guten tag {name}"| C
     C -->|"output:Hi {name}, Hola {name}, Guten tag {name}"| D
 ```
 
