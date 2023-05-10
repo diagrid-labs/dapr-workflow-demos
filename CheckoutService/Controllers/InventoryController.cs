@@ -1,8 +1,8 @@
 using Dapr.Client;
 using Microsoft.AspNetCore.Mvc;
-using WorkflowSample.Models;
+using CheckoutService.Models;
 
-namespace WorkflowSample.Controllers;
+namespace CheckoutService.Controllers;
 
 [ApiController]
 [Route("[controller]")]

@@ -1,6 +1,6 @@
 using Dapr.Workflow;
-using WorkflowSample.Activities;
-using WorkflowSample.Workflows;
+using CheckoutService.Activities;
+using CheckoutService.Workflows;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +10,7 @@ builder.Services.AddDaprWorkflow(options =>
 {
     // Note that it's also possible to register a lambda function as the workflow
     // or activity implementation instead of a class.
-    options.RegisterWorkflow<OrderProcessingWorkflow>();
+    options.RegisterWorkflow<CheckoutWorkflow>();
 
     // These are the activities that get invoked by the workflow(s).
     options.RegisterActivity<NotifyActivity>();

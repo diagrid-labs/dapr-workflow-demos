@@ -1,6 +1,6 @@
 using Dapr.Workflow;
 
-namespace WorkflowSample.Activities
+namespace CheckoutService.Activities
 {
     public record Notification(string Message);
 

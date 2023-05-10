@@ -82,9 +82,9 @@ graph TD
     }
     ```
 
-## Retail workflow sample
+## CheckoutWorkflow sample
 
-The Retail Workflow sample is a workflow that processes an order. The workflow takes an order payload as input and returns an order result as output. The workflow uses these activities:
+The Checkout Workflow sample is a workflow that processes an order. The workflow takes an order payload as input and returns an order result as output. The workflow uses these activities:
 
 - `NotifyActivity`: Notifies the customer of the progress of the order.
 - `CheckInventoryActivity`: Checks if the inventory is sufficient.
@@ -124,24 +124,24 @@ Next to the workflow, this application has an `InventoryController` with the fol
 
 The `InventoryController` also uses Dapr's state management building block.
 
-### Run the RetailWorkflowSample app
+### Run the CheckoutWorkflowSample app
 
-1. Change to the Retail directory and build the ASP.NET app:
+1. Change to the CheckoutService directory and build the ASP.NET app:
 
     ```bash
-    cd Retail
+    cd CheckoutService
     dotnet build
     ```
 
 2. Run the app using the Dapr CLI:
 
     ```bash
-    dapr run --app-id order-processor --app-port 5064 --dapr-http-port 3500 --resources-path ./Resources dotnet run
+    dapr run --app-id checkout --app-port 5064 --dapr-http-port 3500 --resources-path ./Resources dotnet run
     ```
 
     > Ensure the --app-port is the same as the port specified in the launchSettings.json file.
 
-3. Check the inventory using cURL, or use the [retail.http](Retail/retail.http) file if you're using VSCode with the REST client:
+3. Check the inventory using cURL, or use the [checkout.http](CheckoutService/checkout.http) file if you're using VSCode with the REST client:
 
     ```bash
     curl -X POST http://localhost:5064/inventory/restock
@@ -153,10 +153,10 @@ The `InventoryController` also uses Dapr's state management building block.
     curl -X POST http://localhost:5064/inventory/clear
     ```
 
-4. Try ordering 100 paperclips while the inventory is not sufficient. Start the `OrderProcessingWorkflow` via the Workflow HTTP API:
+4. Try ordering 100 paperclips while the inventory is not sufficient. Start the `CheckoutWorkflow` via the Workflow HTTP API:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/1234a/start \
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234a/start \
      -H "Content-Type: application/json" \
      -d '{ "input" : {"Name": "Paperclips", "Quantity": 100}}'
     ```
@@ -176,7 +176,7 @@ The `InventoryController` also uses Dapr's state management building block.
 5. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/1234a/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234a/status
     ```
 
     Expected result:
@@ -191,7 +191,7 @@ The `InventoryController` also uses Dapr's state management building block.
             "dapr.workflow.custom_status": "\"Stopped order process due to insufficient inventory.\"",
             "dapr.workflow.input": "{\"Name\":\"Paperclips\",\"Quantity\":100}",
             "dapr.workflow.last_updated": "2023-05-01T12:15:45Z",
-            "dapr.workflow.name": "OrderProcessingWorkflow",
+            "dapr.workflow.name": "CheckoutWorkflow",
             "dapr.workflow.output": "{\"Processed\":false}",
             "dapr.workflow.runtime_status": "COMPLETED"
         }
@@ -208,10 +208,10 @@ The `InventoryController` also uses Dapr's state management building block.
 
     Expected result: `HTTP 200 OK`
 
-7. Try ordering paperclips again, now within the limits of the inventory. Start the `OrderProcessingWorkflow` via the Workflow HTTP API:
+7. Try ordering paperclips again, now within the limits of the inventory. Start the `CheckoutWorkflow` via the Workflow HTTP API:
 
     ```bash
-    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/1234b/start \
+    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234b/start \
      -H "Content-Type: application/json" \
      -d '{ "input" : {"Name": "Paperclips", "Quantity": 100}}'
     ```
@@ -231,7 +231,7 @@ The `InventoryController` also uses Dapr's state management building block.
 8. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/1234b/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234b/status
     ```
 
     Expected result:
@@ -246,14 +246,14 @@ The `InventoryController` also uses Dapr's state management building block.
             "dapr.workflow.custom_status": "",
             "dapr.workflow.input": "{\"Name\":\"Paperclips\",\"Quantity\":100}",
             "dapr.workflow.last_updated": "2023-05-01T12:22:37Z",
-            "dapr.workflow.name": "OrderProcessingWorkflow",
+            "dapr.workflow.name": "CheckoutWorkflow",
             "dapr.workflow.output": "{\"Processed\":true}",
             "dapr.workflow.runtime_status": "COMPLETED"
         }
     }
     ```
 
-9. Inspect the logs in ZipKin: [`localhost:9411/zipkin`](http://localhost:9411/zipkin). Find the entry marked `order-processor:create_orchestration||orderprocessingworkflow` and show the details. You'll now see a timeline of the workflow at the top, and the activities underneath.
+9. Inspect the logs in ZipKin: [`localhost:9411/zipkin`](http://localhost:9411/zipkin). Find the entry marked `checkout:create_orchestration||checkoutworkflow` and show the details. You'll now see a timeline of the workflow at the top, and the activities underneath.
 
     ![Order processor in Zipkin](images/order-processor_zipkin.png)
 

@@ -1,4 +1,4 @@
-namespace WorkflowSample.Models
+namespace CheckoutService.Models
 {
     public record OrderPayload(string Name, int Quantity = 1);
     public record InventoryRequest(string RequestId, string ItemName, int Quantity);

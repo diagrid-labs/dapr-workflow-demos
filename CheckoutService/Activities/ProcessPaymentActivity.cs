@@ -1,7 +1,7 @@
 using Dapr.Workflow;
-using WorkflowSample.Models;
+using CheckoutService.Models;
 
-namespace WorkflowSample.Activities
+namespace CheckoutService.Activities
 {
     public class ProcessPaymentActivity : WorkflowActivity<PaymentRequest, object?>
     {

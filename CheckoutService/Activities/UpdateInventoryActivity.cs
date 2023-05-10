@@ -1,8 +1,8 @@
 using Dapr.Client;
 using Dapr.Workflow;
-using WorkflowSample.Models;
+using CheckoutService.Models;
 
-namespace WorkflowSample.Activities
+namespace CheckoutService.Activities
 {
     class UpdateInventoryActivity : WorkflowActivity<PaymentRequest, object?>
     {

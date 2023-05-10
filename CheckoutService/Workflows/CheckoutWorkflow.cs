@@ -1,12 +1,12 @@
 using Dapr.Workflow;
 using DurableTask.Core.Exceptions;
 
-using WorkflowSample.Activities;
-using WorkflowSample.Models;
+using CheckoutService.Activities;
+using CheckoutService.Models;
 
-namespace WorkflowSample.Workflows
+namespace CheckoutService.Workflows
 {
-    public class OrderProcessingWorkflow : Workflow<OrderPayload, OrderResult>
+    public class CheckoutWorkflow : Workflow<OrderPayload, OrderResult>
     {
         public override async Task<OrderResult> RunAsync(WorkflowContext context, OrderPayload order)
         {

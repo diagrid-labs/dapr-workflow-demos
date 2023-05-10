@@ -14,7 +14,7 @@ POST {{app_url}}/inventory/restock
 @workflow_id={{$guid}}
 
 // @name wfrequest
-POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/{{workflow_id}}/start
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/{{workflow_id}}/start
 Content-Type: application/json
 
 {
@@ -23,4 +23,4 @@ Content-Type: application/json
 
 ### Get status
 @workflow_id_response={{wfrequest.response.body.instance_id}}
-GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/OrderProcessingWorkflow/{{workflow_id_response}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/{{workflow_id_response}}
