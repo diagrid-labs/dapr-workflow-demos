@@ -1,5 +1,5 @@
 using Dapr.Workflow;
-using HelloWorldWorkflowSample;
+using BasicWorkflowSamples;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +10,8 @@ builder.Services.AddDaprWorkflow(options =>
     // Note that it's also possible to register a lambda function as the workflow
     // or activity implementation instead of a class.
     options.RegisterWorkflow<HelloWorldWorkflow>();
+    options.RegisterWorkflow<ChainingWorkflow>();
+    options.RegisterWorkflow<FanOutFanInWorkflow>();
 
     // These are the activities that get invoked by the workflow(s).
     options.RegisterActivity<CreateGreetingActivity>();

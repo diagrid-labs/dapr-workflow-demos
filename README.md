@@ -24,22 +24,22 @@ graph TD
 
 ### Run the HelloWorldWorkflowSample app
 
-1. Change to the HelloWorld directory and build the ASP.NET app:
+1. Change to the BasicWorkflowSamples directory and build the ASP.NET app:
 
     ```bash
-    cd HelloWorld
+    cd BasicWorkflowSamples
     dotnet build
     ```
 
 2. Run the app using the Dapr CLI:
 
     ```bash
-    dapr run --app-id hello-world --app-port 5065 --dapr-http-port 3500 dotnet run
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 dotnet run
     ```
 
     > Ensure the --app-port is the same as the port specified in the launchSettings.json file.
 
-3. Start the `HelloWorldWorkflow` via the Workflow HTTP API using cURL, or use the [helloworld.http](HelloWorld/helloworld.http) file if you're using VSCode with the REST client:
+3. Start the `HelloWorldWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/1234a/start \
@@ -77,6 +77,142 @@ graph TD
             "dapr.workflow.last_updated": "2023-05-01T12:15:45Z",
             "dapr.workflow.name": "HelloWorldWorkflow",
             "dapr.workflow.output": "\"Hi Marc"\",
+            "dapr.workflow.runtime_status": "COMPLETED"
+        }
+    }
+    ```
+
+## Chaining workflow sample
+
+The Chaining Workflow sample is a workflow that chains three activities of the same type `CreateGreetingActivity`, each prepending a random greeting to the input. The output of the activity is used as an input for the next activity in the chain.
+
+```mermaid
+graph TD
+    A[Start]
+    B1[CreateGreetingActivity]
+    B2[CreateGreetingActivity]
+    B3[CreateGreetingActivity]
+    C[End]
+    A -->|"input: {name}"| B1 -->|"output/input: Bonjour {name}"| B2
+    B2 -->|"output/input: Hi Bonjour {name}"| B3
+    B3 -->|"output: Ciao Hi Bonjour {name}"| C
+```
+
+1. Ensure that the BasicWorkflowSamples app is still running, if not change to the BasicWorkflowSamples directory, build the app, and run the app using the Dapr CLI:
+
+    ```bash
+    cd BasicWorkflowSamples
+    dotnet build
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 dotnet run
+    ```
+
+2. Start the `ChainingWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
+
+   ```bash
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ChainingWorkflow/1234b/start \
+     -H "Content-Type: application/json" \
+     -d '{ "input" : "Marc"}'
+    ```
+
+    > Note that `1234a` in the URL is the workflow instance ID. This can be any string you want.
+
+    Expected result:
+
+    ```json
+    {
+        "instance_id": "<WORKFLOW_ID>"
+    }
+    ```
+
+3. Check the workflow status via Workflow HTTP API:
+
+    ```bash
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/ChainingWorkflow/1234b/status
+    ```
+
+    Expected result:
+
+    ```json
+    {
+        "WFInfo": {
+            "instance_id": "<WORKFLOW_ID>"
+        },
+        "start_time": "2023-05-10T12:07:38Z",
+        "metadata": {
+            "dapr.workflow.custom_status": "",
+            "dapr.workflow.input": "\"Marc\"",
+            "dapr.workflow.last_updated": "2023-05-10T12:07:38Z",
+            "dapr.workflow.name": "ChainingWorkflow",
+            "dapr.workflow.output": "\"Ciao Hi Bonjour Marc\"",
+            "dapr.workflow.runtime_status": "COMPLETED"
+        }
+    }
+    ```
+
+## Fan-out / Fan-in workflow sample
+
+The Fan-out / Fan-in Workflow sample is a workflow that fans out and schedules three activities (`CreateGreetingActivity`) simultaneously and waits until all of the activities are completed. The output of the workflow is the combination of the individual activities.
+
+```mermaid
+graph TD
+    A[Start]
+    B1[CreateGreetingActivity]
+    B2[CreateGreetingActivity]
+    B3[CreateGreetingActivity]
+    C([Task.WhenAll & string.Join])
+    D[End]
+    A -->|"input: {name}"| B1 -->|"output/input: Hi {name}"| C
+    A -->|"input: {name}"| B2 -->|"output/input: Hola {name}"| C
+    A -->|"input: {name}"| B3 -->|"output/input: Guten tag {name}"| C
+    C -->|"output:Hi {name}, Hola {name}, Guten tag {name}"| D
+```
+
+1. Ensure that the BasicWorkflowSamples app is still running, if not change to the BasicWorkflowSamples directory, build the app, and run the app using the Dapr CLI:
+
+    ```bash
+    cd BasicWorkflowSamples
+    dotnet build
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 dotnet run
+    ```
+
+2. Start the `FanOutFanInWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
+
+   ```bash
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/1234c/start \
+     -H "Content-Type: application/json" \
+     -d '{ "input" : "Marc"}'
+    ```
+
+    > Note that `1234c` in the URL is the workflow instance ID. This can be any string you want.
+
+    Expected result:
+
+    ```json
+    {
+        "instance_id": "<WORKFLOW_ID>"
+    }
+    ```
+
+3. Check the workflow status via Workflow HTTP API:
+
+    ```bash
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/1234c/status
+    ```
+
+    Expected result:
+
+    ```json
+    {
+        "WFInfo": {
+            "instance_id": "<WORKFLOW_ID>"
+        },
+        "start_time": "2023-05-10T12:14:15Z",
+        "metadata": {
+            "dapr.workflow.custom_status": "",
+            "dapr.workflow.input": "\"Marc\"",
+            "dapr.workflow.last_updated": "2023-05-10T12:14:15Z",
+            "dapr.workflow.name": "FanOutFanInWorkflow",
+            "dapr.workflow.output": "\"Hi Marc,Hola Marc,Guten Tag Marc\"",
             "dapr.workflow.runtime_status": "COMPLETED"
         }
     }

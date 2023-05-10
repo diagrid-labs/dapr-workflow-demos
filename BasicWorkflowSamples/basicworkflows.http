@@ -1,0 +1,47 @@
+@dapr_url=http://localhost:3500 
+@workflow_id={{$guid}}
+
+###
+### Run Hello World workflow
+###
+// @name wfrequest
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/{{workflow_id}}/start
+Content-Type: application/json
+
+{
+    "input" : "Marc"
+}
+
+### Get status
+@workflow_helloworld_id_response={{wfrequest.response.body.instance_id}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/{{workflow_helloworld_id_response}}
+
+###
+### Run Chaining workflow
+### 
+// @name wfchainingrequest
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/ChainingWorkflow/{{workflow_id}}/start
+Content-Type: application/json
+
+{
+    "input" : "Marc"
+}
+
+### Get status
+@workflow_chaining_id_response={{wfchainingrequest.response.body.instance_id}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/ChainingWorkflow/{{workflow_chaining_id_response}}
+
+###
+### Run FanOutFanIn workflow
+### 
+// @name wfchainingrequest
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/{{workflow_id}}/start
+Content-Type: application/json
+
+{
+    "input" : "Marc"
+}
+
+### Get status
+@workflow_chaining_id_response={{wfchainingrequest.response.body.instance_id}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/{{workflow_chaining_id_response}}
