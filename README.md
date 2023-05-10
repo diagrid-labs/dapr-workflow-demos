@@ -114,7 +114,7 @@ graph TD
      -d '{ "input" : "Marc"}'
     ```
 
-    > Note that `1234a` in the URL is the workflow instance ID. This can be any string you want.
+    > Note that `1234b` in the URL is the workflow instance ID. This can be any string you want.
 
     Expected result:
 
@@ -292,12 +292,12 @@ The `InventoryController` also uses Dapr's state management building block.
 4. Try ordering 100 paperclips while the inventory is not sufficient. Start the `CheckoutWorkflow` via the Workflow HTTP API:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234a/start \
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234d/start \
      -H "Content-Type: application/json" \
      -d '{ "input" : {"Name": "Paperclips", "Quantity": 100}}'
     ```
 
-    > Note that `1234a` in the URL is the workflow instance ID. This can be any string you want.
+    > Note that `1234d` in the URL is the workflow instance ID. This can be any string you want.
 
     Expected result:
 
@@ -312,7 +312,7 @@ The `InventoryController` also uses Dapr's state management building block.
 5. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234a/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234d/status
     ```
 
     Expected result:
@@ -347,12 +347,12 @@ The `InventoryController` also uses Dapr's state management building block.
 7. Try ordering paperclips again, now within the limits of the inventory. Start the `CheckoutWorkflow` via the Workflow HTTP API:
 
     ```bash
-    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234b/start \
+    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234d/start \
      -H "Content-Type: application/json" \
      -d '{ "input" : {"Name": "Paperclips", "Quantity": 100}}'
     ```
 
-    > Note that `1234b` in the URL is the workflow instance ID. This can be any string you want.
+    > Note that `1234d` in the URL is the workflow instance ID. This can be any string you want.
 
     Expected result:
 
@@ -367,7 +367,7 @@ The `InventoryController` also uses Dapr's state management building block.
 8. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234b/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234d/status
     ```
 
     Expected result:
@@ -391,7 +391,7 @@ The `InventoryController` also uses Dapr's state management building block.
 
 9. Inspect the logs in ZipKin: [`localhost:9411/zipkin`](http://localhost:9411/zipkin). Find the entry marked `checkout:create_orchestration||checkoutworkflow` and show the details. You'll now see a timeline of the workflow at the top, and the activities underneath.
 
-    ![Order processor in Zipkin](images/order-processor_zipkin.png)
+    ![Checkout workflow in Zipkin](images/checkout_zipkin.png)
 
 ## Resources
 
