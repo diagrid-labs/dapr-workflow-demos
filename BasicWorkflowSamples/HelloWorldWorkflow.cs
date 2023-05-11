@@ -6,8 +6,6 @@ namespace BasicWorkflowSamples
     {
         public override async Task<string> RunAsync(WorkflowContext context, string input)
         {
-            string orderId = context.InstanceId;
-
             var message = await context.CallActivityAsync<string>(
                 nameof(CreateGreetingActivity),
                 input);
