@@ -2,27 +2,22 @@ using Dapr.Workflow;
 
 namespace BasicWorkflowSamples
 {
-    public class FanOutFanInWorkflow : Workflow<string, string>
+    public class FanOutFanInWorkflow : Workflow<string[], string[]>
     {
-        public override async Task<string> RunAsync(WorkflowContext context, string input)
+        public override async Task<string[]> RunAsync(WorkflowContext context, string[] input)
         {
             var tasks = new List<Task<string>>();
 
-            tasks.Add(context.CallActivityAsync<string>(
-                nameof(CreateGreetingActivity),
-                input));
-            
-            tasks.Add(context.CallActivityAsync<string>(
-                nameof(CreateGreetingActivity),
-                input));
-            
-            tasks.Add(context.CallActivityAsync<string>(
-                nameof(CreateGreetingActivity),
-                input));
+            foreach (var name in input)
+            {
+                tasks.Add(context.CallActivityAsync<string>(
+                    nameof(CreateGreetingActivity),
+                    name));
+            }
 
             var messages = await Task.WhenAll(tasks);
 
-            return string.Join(',', messages);
+            return messages;
         }
     }
 }

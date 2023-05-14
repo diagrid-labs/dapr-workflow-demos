@@ -39,7 +39,11 @@ POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/{{workflow_id}}
 Content-Type: application/json
 
 {
-    "input" : "Marc"
+    "input" : [
+        "Alice",
+        "Kendall",
+        "Sam"
+    ]
 }
 
 ### Get status
