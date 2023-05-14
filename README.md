@@ -219,6 +219,73 @@ graph TD
         }
     ```
 
+## ContinueAsNew sample
+
+The ContinueAsNew sample is a workflow with a numeric input (counter) and restarts the workflow (with an updated counter) until the counter reaches 10. The workflow diagram is as follows:
+
+```mermaid
+graph TD
+    A[Start]
+    B[CreateGreetingActivity]
+    C{counter < 10}
+    D[End]
+    A --> |"input: {counter}"| B
+    B -->|"output: Hi {counter}"| C
+    C --> |"[Yes] {counter+=1}"| A
+    C -->|"[No] output: Konnichiwa 10"| D
+
+```
+
+1. Ensure that the BasicWorkflowSamples app is still running, if not change to the BasicWorkflowSamples directory, build the app, and run the app using the Dapr CLI:
+
+    ```bash
+    cd BasicWorkflowSamples
+    dotnet build
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 dotnet run
+    ```
+
+2. Start the `ContinueAsNewWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
+
+   ```bash
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/1234d/start \
+     -H "Content-Type: application/json" \
+     -d '{ "input" : 0"}'
+    ```
+
+    > Note that `1234d` in the URL is the workflow instance ID. This can be any string you want.
+
+    Expected result:
+
+    ```json
+    {
+        "instance_id": "<WORKFLOW_ID>"
+    }
+    ```
+
+3. Check the workflow status via Workflow HTTP API:
+
+    ```bash
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/1234d/status
+    ```
+
+    Expected result:
+
+    ```json
+    {
+        "WFInfo": {
+            "instance_id": "<WORKFLOW_ID>"
+        },
+        "start_time": "2023-05-14T16:29:53Z",
+        "metadata": {
+            "dapr.workflow.custom_status": "",
+            "dapr.workflow.input": "0",
+            "dapr.workflow.last_updated": "2023-05-14T16:29:54Z",
+            "dapr.workflow.name": "ContinueAsNewWorkflow",
+            "dapr.workflow.output": "\"Konnichiwa 10\"",
+            "dapr.workflow.runtime_status": "COMPLETED"
+        }
+    ```
+
 ## CheckoutWorkflow sample
 
 The Checkout Workflow sample is a workflow that processes an order. The workflow takes an order payload as input and returns an order result as output. The workflow uses these activities:
@@ -293,12 +360,12 @@ The `InventoryController` also uses Dapr's state management building block.
 4. Try ordering 100 paperclips while the inventory is not sufficient. Start the `CheckoutWorkflow` via the Workflow HTTP API:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234d/start \
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234e/start \
      -H "Content-Type: application/json" \
      -d '{ "input" : {"Name": "Paperclips", "Quantity": 100}}'
     ```
 
-    > Note that `1234d` in the URL is the workflow instance ID. This can be any string you want.
+    > Note that `1234e` in the URL is the workflow instance ID. This can be any string you want.
 
     Expected result:
 
@@ -313,7 +380,7 @@ The `InventoryController` also uses Dapr's state management building block.
 5. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234d/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234e/status
     ```
 
     Expected result:

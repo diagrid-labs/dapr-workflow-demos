@@ -12,6 +12,7 @@ builder.Services.AddDaprWorkflow(options =>
     options.RegisterWorkflow<HelloWorldWorkflow>();
     options.RegisterWorkflow<ChainingWorkflow>();
     options.RegisterWorkflow<FanOutFanInWorkflow>();
+    options.RegisterWorkflow<ContinueAsNewWorkflow>();
 
     // These are the activities that get invoked by the workflow(s).
     options.RegisterActivity<CreateGreetingActivity>();

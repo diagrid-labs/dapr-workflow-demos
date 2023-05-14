@@ -2,40 +2,54 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build",
+            "label": "BasicWorkflowSamples Build",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/Retail/RetailWorkflowSample.csproj",
+                "${workspaceFolder}/BasicWorkflowSamples/BasicWorkflowSamples.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "publish",
+            "label": "BasicWorkflowSamples Publish",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/Retail/RetailWorkflowSample.csproj",
+                "${workspaceFolder}/BasicWorkflowSamples/BasicWorkflowSamples.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "watch",
+            "label": "BasicWorkflowSamples Watch",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/Retail/RetailWorkflowSample.csproj"
+                "${workspaceFolder}/BasicWorkflowSamples/BasicWorkflowSamples.csproj"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "appId": "basic-workflows",
+            "appPort": 5065,
+            "httpPort": 3500,
+            "grpcPort": 50000,
+            "label": "basic-workflows debug",
+            "type": "dapr",
+            "dependsOn": "build"
+        },
+        {
+            "appId": "basic-workflows",
+            "label": "basic-workflows daprd-down",
+            "type": "daprd-down"
         },
         {
             "appId": "order-processor",

@@ -2,38 +2,14 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": ".NET Core Launch (web)",
+            "name": "Basic Workflows",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/Retail/bin/Debug/net7.0/RetailWorkflowSample.dll",
+            "preLaunchTask": "basic-workflows debug",
+            "postDebugTask": "basic-workflows daprd-down",
+            "program": "${workspaceFolder}/BasicWorkflowSamples/bin/Debug/net7.0/BasicWorkflowSamples.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/Retail",
-            "stopAtEntry": false,
-            "serverReadyAction": {
-                "action": "openExternally",
-                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
-            },
-            "env": {
-                "ASPNETCORE_ENVIRONMENT": "Development"
-            },
-            "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Views"
-            }
-        },
-        {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach"
-        },
-        {
-            "name": ".NET Core Launch (web) with Dapr",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "dapr-debug",
-            "program": "${workspaceFolder}/Retail/bin/Debug/net7.0/RetailWorkflowSample.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}/Retail",
+            "cwd": "${workspaceFolder}/BasicWorkflowSamples",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -47,7 +23,6 @@
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"
             },
-            "postDebugTask": "daprd-down"
         }
     ]
 }

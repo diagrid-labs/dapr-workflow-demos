@@ -12,7 +12,7 @@ Content-Type: application/json
     "input" : "Marc"
 }
 
-### Get status
+### Get status for Hello World workflow
 @workflow_helloworld_id_response={{wfrequest.response.body.instance_id}}
 GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/{{workflow_helloworld_id_response}}
 
@@ -27,7 +27,7 @@ Content-Type: application/json
     "input" : "Marc"
 }
 
-### Get status
+### Get status for Chaining workflow
 @workflow_chaining_id_response={{wfchainingrequest.response.body.instance_id}}
 GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/ChainingWorkflow/{{workflow_chaining_id_response}}
 
@@ -46,6 +46,21 @@ Content-Type: application/json
     ]
 }
 
-### Get status
+### Get status for FanOutFanIn workflow
 @workflow_chaining_id_response={{wfchainingrequest.response.body.instance_id}}
 GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/{{workflow_chaining_id_response}}
+
+###
+### Run ContinueAsNew workflow
+### 
+// @name wfcontinuerequest
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/{{workflow_id}}/start
+Content-Type: application/json
+
+{
+    "input" : 0
+}
+
+### Get status for ContinueAsNew workflow
+@workflow_continue_id_response={{wfcontinuerequest.response.body.instance_id}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/{{workflow_continue_id_response}}
