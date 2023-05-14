@@ -151,20 +151,22 @@ graph TD
 
 ## Fan-out / Fan-in workflow sample
 
-The Fan-out / Fan-in Workflow sample is a workflow that fans out and schedules three activities (`CreateGreetingActivity`) simultaneously and waits until all of the activities are completed. The output of the workflow is the combination of the individual activities.
+The Fan-out / Fan-in Workflow sample is a workflow that fans out and schedules an activity (`CreateGreetingActivity`) for each element in the input array and waits until all of the activities are completed. The output of the workflow is an array of greetings.
 
 ```mermaid
 graph TD
     A[Start]
+    A1([for each name in names])
     B1[CreateGreetingActivity]
     B2[CreateGreetingActivity]
     B3[CreateGreetingActivity]
-    C([Task.WhenAll & string.Join])
+    C([Task.WhenAll])
     D[End]
-    A -->|"input: {name}"| B1 -->|"output: Hi {name}"| C
-    A -->|"input: {name}"| B2 -->|"output: Hola {name}"| C
-    A -->|"input: {name}"| B3 -->|"output: Guten tag {name}"| C
-    C -->|"output:Hi {name}, Hola {name}, Guten tag {name}"| D
+    A --> |"input: [{name1}, {name2}, {name3}]"| A1
+    A1 -->|"input: {name1}"| B1 -->|"output: Hi {name1}"| C
+    A1 -->|"input: {name2}"| B2 -->|"output: Hola {name2}"| C
+    A1 -->|"input: {name3}"| B3 -->|"output: Guten tag {name3}"| C
+    C -->|"output: [Hi {name1}, Hola {name2}, Guten tag {name3}]"| D
 ```
 
 1. Ensure that the BasicWorkflowSamples app is still running, if not change to the BasicWorkflowSamples directory, build the app, and run the app using the Dapr CLI:
@@ -180,7 +182,7 @@ graph TD
    ```bash
    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/1234c/start \
      -H "Content-Type: application/json" \
-     -d '{ "input" : "Marc"}'
+     -d '{ "input" : ["Alice", "Kendall", "Sam"]"}'
     ```
 
     > Note that `1234c` in the URL is the workflow instance ID. This can be any string you want.
@@ -206,16 +208,15 @@ graph TD
         "WFInfo": {
             "instance_id": "<WORKFLOW_ID>"
         },
-        "start_time": "2023-05-10T12:14:15Z",
+        "start_time": "2023-05-14T16:29:53Z",
         "metadata": {
             "dapr.workflow.custom_status": "",
-            "dapr.workflow.input": "\"Marc\"",
-            "dapr.workflow.last_updated": "2023-05-10T12:14:15Z",
+            "dapr.workflow.input": "[\"Alice\",\"Kendall\",\"Sam\"]",
+            "dapr.workflow.last_updated": "2023-05-14T16:29:54Z",
             "dapr.workflow.name": "FanOutFanInWorkflow",
-            "dapr.workflow.output": "\"Hi Marc,Hola Marc,Guten Tag Marc\"",
+            "dapr.workflow.output": "[\"Guten Tag Alice\",\"Hi Kendall\",\"Hello Sam\"]",
             "dapr.workflow.runtime_status": "COMPLETED"
         }
-    }
     ```
 
 ## CheckoutWorkflow sample
