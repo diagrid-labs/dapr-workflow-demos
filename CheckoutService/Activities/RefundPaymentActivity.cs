@@ -1,14 +1,17 @@
 using Dapr.Workflow;
 using CheckoutService.Models;
+using Dapr.Client;
 
 namespace CheckoutService.Activities
 {
     public class RefundPaymentActivity : WorkflowActivity<PaymentRequest, object?>
     {
-        readonly ILogger _logger;
+        private readonly ILogger _logger;
+        private readonly DaprClient _client;
 
-        public RefundPaymentActivity(ILoggerFactory loggerFactory)
+        public RefundPaymentActivity(ILoggerFactory loggerFactory, DaprClient client)
         {
+            _client = client;
             _logger = loggerFactory.CreateLogger<RefundPaymentActivity>();
         }
 
@@ -20,8 +23,8 @@ namespace CheckoutService.Activities
                 req.Name,
                 req.TotalCost);
 
-            // Simulate slow processing
-            await Task.Delay(TimeSpan.FromSeconds(2));
+            var request = _client.CreateInvokeMethodRequest(HttpMethod.Post, "payment", "refund", req);
+            await _client.InvokeMethodAsync(request);
 
             _logger.LogInformation(
                 "Payment for request ID '{requestId}' refunded successfully",

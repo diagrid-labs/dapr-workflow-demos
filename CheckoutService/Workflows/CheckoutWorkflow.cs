@@ -1,8 +1,8 @@
 using Dapr.Workflow;
-using DurableTask.Core.Exceptions;
 
 using CheckoutService.Activities;
 using CheckoutService.Models;
+using Microsoft.DurableTask;
 
 namespace CheckoutService.Workflows
 {
@@ -35,9 +35,12 @@ namespace CheckoutService.Workflows
                 return new OrderResult(Processed: false);
             }
 
+            var taskOptions = new TaskOptions(
+                new TaskRetryOptions(
+                    new RetryPolicy(10, TimeSpan.FromSeconds(1), 2)));
             await context.CallActivityAsync(
                 nameof(ProcessPaymentActivity),
-                new PaymentRequest(RequestId: orderId, order.Name, inventoryResult.TotalCost));
+                new PaymentRequest(orderId, order.Name, inventoryResult.TotalCost), taskOptions);
 
             try
             {
@@ -47,7 +50,7 @@ namespace CheckoutService.Workflows
             }
             catch (Exception ex)
             {
-                if (ex.InnerException is TaskFailedException)
+                if (ex.InnerException is DurableTask.Core.Exceptions.TaskFailedException)
                 {
                     await context.CallActivityAsync(
                         nameof(NotifyActivity),

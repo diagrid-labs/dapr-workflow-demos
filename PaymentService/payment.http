@@ -1,7 +1,19 @@
 @app_url=http://localhost:5063
+@dapr_http_url=http://localhost:3501
 
 
-### Pay
+### Pay via Dapr endpoint
+POST {{dapr_http_url}}/v1.0/invoke/payment/method/pay
+Content-Type: application/json
+
+{
+    "requestId": "{{$guid}}",
+    "name": "Marc",
+    "totalCost": 100
+}
+
+
+### Pay via app endpoint
 POST {{app_url}}/pay
 Content-Type: application/json
 
@@ -12,7 +24,7 @@ Content-Type: application/json
 }
 
 
-### Refund
+### Refund via app endpoint
 POST {{app_url}}/refund
 Content-Type: application/json
 
