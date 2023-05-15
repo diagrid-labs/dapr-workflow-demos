@@ -64,3 +64,18 @@ Content-Type: application/json
 ### Get status for ContinueAsNew workflow
 @workflow_continue_id_response={{wfcontinuerequest.response.body.instance_id}}
 GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/{{workflow_continue_id_response}}
+
+###
+### Run Timer workflow
+### 
+// @name wftimerrequest
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/TimerWorkflow/{{workflow_id}}/start
+Content-Type: application/json
+
+{
+    "input" : { "DateTime": "2023-05-15T06:00:00+00:00", "Name": "Marc" }
+}
+
+### Get status for Timer workflow
+@workflow_timer_id_response={{wftimerrequest.response.body.instance_id}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/TimerWorkflow/{{workflow_timer_id_response}}
