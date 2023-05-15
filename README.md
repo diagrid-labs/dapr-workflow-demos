@@ -19,7 +19,7 @@ graph TD
     A[Start]
     B[CreateGreetingActivity]
     C[End]
-    A -->|"input: {name}"| B -->|"output: Hi {name}"| C
+    A -->|"input: {name}"| B -->|"output: {greeting} {name}"| C
 ```
 
 ### Run the HelloWorldWorkflowSample app
@@ -93,9 +93,9 @@ graph TD
     B2[CreateGreetingActivity]
     B3[CreateGreetingActivity]
     C[End]
-    A -->|"input: {name}"| B1 -->|"output/input: Bonjour {name}"| B2
-    B2 -->|"output/input: Hi Bonjour {name}"| B3
-    B3 -->|"output: Ciao Hi Bonjour {name}"| C
+    A -->|"input: {name}"| B1 -->|"output/input: {greeting1} {name}"| B2
+    B2 -->|"output/input: {greeting2} {greeting1} {name}"| B3
+    B3 -->|"output: {greeting3} {greeting2} {greeting1} {name}"| C
 ```
 
 1. Ensure that the BasicWorkflowSamples app is still running, if not change to the BasicWorkflowSamples directory, build the app, and run the app using the Dapr CLI:
@@ -163,10 +163,10 @@ graph TD
     C([Task.WhenAll])
     D[End]
     A --> |"input: [{name1}, {name2}, {name3}]"| A1
-    A1 -->|"input: {name1}"| B1 -->|"output: Hi {name1}"| C
-    A1 -->|"input: {name2}"| B2 -->|"output: Hola {name2}"| C
-    A1 -->|"input: {name3}"| B3 -->|"output: Guten tag {name3}"| C
-    C -->|"output: [Hi {name1}, Hola {name2}, Guten tag {name3}]"| D
+    A1 -->|"input: {name1}"| B1 -->|"output: {greeting1} {name1}"| C
+    A1 -->|"input: {name2}"| B2 -->|"output: {greeting2} {name2}"| C
+    A1 -->|"input: {name3}"| B3 -->|"output: {greeting3} {name3}"| C
+    C -->|"output: [{greeting1} {name1}, {greeting2} {name2}, {greeting3} {name3}]"| D
 ```
 
 1. Ensure that the BasicWorkflowSamples app is still running, if not change to the BasicWorkflowSamples directory, build the app, and run the app using the Dapr CLI:
@@ -249,7 +249,7 @@ graph TD
    ```bash
    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/1234d/start \
      -H "Content-Type: application/json" \
-     -d '{ "input" : 0"}'
+     -d '{ "input" : 0}'
     ```
 
     > Note that `1234d` in the URL is the workflow instance ID. This can be any string you want.
@@ -282,6 +282,75 @@ graph TD
             "dapr.workflow.last_updated": "2023-05-14T16:29:54Z",
             "dapr.workflow.name": "ContinueAsNewWorkflow",
             "dapr.workflow.output": "\"Konnichiwa 10\"",
+            "dapr.workflow.runtime_status": "COMPLETED"
+        }
+    ```
+
+## Timer sample
+
+The Timer sample is a workflow with a TimerWorkflowInput object that contains a name and a date. If the date from the input is larger that the current date, a timer is started and the workflow will only continue once the timer has completed.:
+
+```mermaid
+graph TD
+    A[Start]
+    B{input date > current date}
+    C([CreateTimer])
+    D[CreateGreetingActivity]
+    E[End]
+    A --> |"input: {name}"| B
+    B -->|"[Yes]"| C
+    C -->|"Wait"| A
+    B -->|"[No] input: {name}"| D
+    D -->|"output: {greeting} {name}"| E
+
+```
+
+1. Ensure that the BasicWorkflowSamples app is still running, if not change to the BasicWorkflowSamples directory, build the app, and run the app using the Dapr CLI:
+
+    ```bash
+    cd BasicWorkflowSamples
+    dotnet build
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 dotnet run
+    ```
+
+2. Start the `TimerWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
+
+   ```bash
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/TimerWorkflow/1234e/start \
+     -H "Content-Type: application/json" \
+     -d '{ "input" : "Marc"}'
+    ```
+
+    > Note that `1234e` in the URL is the workflow instance ID. This can be any string you want.
+
+    Expected result:
+
+    ```json
+    {
+        "instance_id": "<WORKFLOW_ID>"
+    }
+    ```
+
+3. Check the workflow status via Workflow HTTP API:
+
+    ```bash
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/TimerWorkflow/1234e/status
+    ```
+
+    Expected result:
+
+    ```json
+    {
+        "WFInfo": {
+            "instance_id": "<WORKFLOW_ID>"
+        },
+        "start_time": "2023-05-14T16:29:53Z",
+        "metadata": {
+            "dapr.workflow.custom_status": "",
+            "dapr.workflow.input": "Marc",
+            "dapr.workflow.last_updated": "2023-05-14T16:29:54Z",
+            "dapr.workflow.name": "TimerWorkflow",
+            "dapr.workflow.output": "\"Konnichiwa Marc\"",
             "dapr.workflow.runtime_status": "COMPLETED"
         }
     ```
