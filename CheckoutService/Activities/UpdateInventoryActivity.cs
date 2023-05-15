@@ -4,7 +4,7 @@ using CheckoutService.Models;
 
 namespace CheckoutService.Activities
 {
-    class UpdateInventoryActivity : WorkflowActivity<PaymentRequest, object?>
+    class UpdateInventoryActivity : WorkflowActivity<InventoryRequest, object?>
     {
         static readonly string storeName = "statestore";
         readonly ILogger _logger;
@@ -16,12 +16,12 @@ namespace CheckoutService.Activities
             _client = client;
         }
 
-        public override async Task<object?> RunAsync(WorkflowActivityContext context, PaymentRequest req)
+        public override async Task<object?> RunAsync(WorkflowActivityContext context, InventoryRequest req)
         {
             _logger.LogInformation(
-                "Re-checking inventory for order '{requestId}' for {amount} {name}",
+                "Re-checking inventory for order '{requestId}' for {quantity} {itemName}",
                 req.RequestId,
-                req.Amount,
+                req.Quantity,
                 req.ItemName);
 
             // Simulate slow processing
@@ -31,7 +31,7 @@ namespace CheckoutService.Activities
             InventoryItem item = await _client.GetStateAsync<InventoryItem>(
                 storeName,
                 req.ItemName.ToLowerInvariant());
-            int newQuantity = item.Quantity - req.Amount;
+            int newQuantity = item.Quantity - req.Quantity;
             if (newQuantity < 0)
             {
                 _logger.LogInformation(

@@ -38,31 +38,67 @@
             "problemMatcher": "$msCompile"
         },
         {
+            "label": "CheckoutService Build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/CheckoutService/CheckoutWorkflowSample.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "CheckoutService Publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/CheckoutService/CheckoutWorkflowSample.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "CheckoutService Watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/CheckoutService/CheckoutWorkflowSample.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "basic-workflows debug",
             "appId": "basic-workflows",
             "appPort": 5065,
             "httpPort": 3500,
             "grpcPort": 50000,
-            "label": "basic-workflows debug",
             "type": "dapr",
-            "dependsOn": "build"
+            "dependsOn": "BasicWorkflowSamples Build"
         },
         {
-            "appId": "basic-workflows",
             "label": "basic-workflows daprd-down",
+            "appId": "basic-workflows",
             "type": "daprd-down"
         },
         {
-            "appId": "order-processor",
+            "label": "checkout debug",
+            "appId": "checkout",
             "appPort": 5064,
             "httpPort": 3500,
             "grpcPort": 50000,
-            "label": "dapr-debug",
             "type": "dapr",
-            "dependsOn": "build"
+            "dependsOn": "CheckoutService Build"
         },
         {
-            "appId": "order-processor",
-            "label": "daprd-down",
+            "label": "checkout daprd-down",
+            "appId": "checkout",
             "type": "daprd-down"
         }
     ]

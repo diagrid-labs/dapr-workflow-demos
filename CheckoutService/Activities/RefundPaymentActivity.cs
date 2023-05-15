@@ -15,11 +15,10 @@ namespace CheckoutService.Activities
         public override async Task<object?> RunAsync(WorkflowActivityContext context, PaymentRequest req)
         {
             _logger.LogInformation(
-                "Refunding payment: {requestId} for {amount} {item} at ${currency}",
+                "Refunding payment: {requestId} for {name} at ${totalCost}",
                 req.RequestId,
-                req.Amount,
-                req.ItemName,
-                req.Currency);
+                req.Name,
+                req.TotalCost);
 
             // Simulate slow processing
             await Task.Delay(TimeSpan.FromSeconds(2));

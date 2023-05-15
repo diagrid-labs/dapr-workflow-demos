@@ -1,0 +1,23 @@
+@app_url=http://localhost:5063
+
+
+### Pay
+POST {{app_url}}/pay
+Content-Type: application/json
+
+{
+    "requestId": "{{$guid}}",
+    "name": "Marc",
+    "totalCost": 100
+}
+
+
+### Refund
+POST {{app_url}}/refund
+Content-Type: application/json
+
+{
+    "requestId": "{{$guid}}",
+    "name": "Marc",
+    "totalCost": 100
+}

@@ -18,9 +18,10 @@ namespace CheckoutService.Workflows
                 new Notification($"Received order {orderId} for {order.Quantity} {order.Name}"));
 
             // Determine if there is enough of the item available for purchase by checking the inventory
+            var inventoryRequest = new InventoryRequest(RequestId: orderId, order.Name, order.Quantity);
             InventoryResult inventoryResult = await context.CallActivityAsync<InventoryResult>(
                 nameof(CheckInventoryActivity),
-                new InventoryRequest(RequestId: orderId, order.Name, order.Quantity));
+                inventoryRequest);
 
             // If there is insufficient inventory, fail and let the user know 
             if (!inventoryResult.Success)
@@ -36,13 +37,13 @@ namespace CheckoutService.Workflows
 
             await context.CallActivityAsync(
                 nameof(ProcessPaymentActivity),
-                new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, inventoryResult.TotalCost));
+                new PaymentRequest(RequestId: orderId, order.Name, inventoryResult.TotalCost));
 
             try
             {
                 await context.CallActivityAsync(
                     nameof(UpdateInventoryActivity),
-                    new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, inventoryResult.TotalCost));
+                    inventoryRequest);
             }
             catch (Exception ex)
             {
@@ -53,7 +54,7 @@ namespace CheckoutService.Workflows
                         new Notification($"Order {orderId} Failed! You are now getting a refund"));
                     await context.CallActivityAsync(
                         nameof(RefundPaymentActivity),
-                        new PaymentRequest(RequestId: orderId, order.Name, order.Quantity, inventoryResult.TotalCost));
+                        new PaymentRequest(RequestId: orderId, order.Name, inventoryResult.TotalCost));
                     context.SetCustomStatus("Stopped order process due to error in inventory update.");
 
                     return new OrderResult(Processed: false);
