@@ -25,13 +25,13 @@ namespace CheckoutService.Activities
                 req.ItemName);
 
             // Simulate slow processing
-            await Task.Delay(TimeSpan.FromSeconds(5));
+            await Task.Delay(TimeSpan.FromSeconds(3));
 
             // Determine if there are enough Items for purchase
-            InventoryItem item = await _client.GetStateAsync<InventoryItem>(
+            var product = await _client.GetStateAsync<InventoryItem>(
                 storeName,
                 req.ItemName.ToLowerInvariant());
-            int newQuantity = item.Quantity - req.Quantity;
+            int newQuantity = product.Quantity - req.Quantity;
             if (newQuantity < 0)
             {
                 _logger.LogInformation(
@@ -44,12 +44,12 @@ namespace CheckoutService.Activities
             await _client.SaveStateAsync(
                 storeName,
                 req.ItemName.ToLowerInvariant(),
-                new InventoryItem(Name: req.ItemName, PerItemCost: item.PerItemCost, Quantity: newQuantity));
+                new InventoryItem(ProductId: product.ProductId, Name: req.ItemName, PerItemCost: product.PerItemCost, Quantity: newQuantity));
 
             _logger.LogInformation(
                 "There are now {quantity} {name} left in stock",
                 newQuantity,
-                item.Name);
+                product.Name);
 
             return null;
         }

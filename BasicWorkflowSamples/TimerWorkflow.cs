@@ -6,14 +6,17 @@ namespace BasicWorkflowSamples
     {
         public override async Task<string> RunAsync(WorkflowContext context, TimerWorkflowInput input)
         { 
-            if (input.DateTime > context.CurrentUtcDateTime)
+            if (input.DateTime.ToUniversalTime() > context.CurrentUtcDateTime)
             {
-                await context.CreateTimer(input.DateTime, default(CancellationToken));
+                context.SetCustomStatus($"Waiting for timer: {input.DateTime:yyyy-MM-dd HH:mm:ss}");
+                await context.CreateTimer(input.DateTime, default);
             }
+
+            context.SetCustomStatus(null);
 
             var message =  await context.CallActivityAsync<string>(
                 nameof(CreateGreetingActivity),
-                $"{input.Name} at {input.DateTime.ToString("yyyy-MM-dd HH:mm:ss")}");
+                $"{input.Name} at {input.DateTime:yyyy-MM-dd HH:mm:ss}");
 
             return message;
         }

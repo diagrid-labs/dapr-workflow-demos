@@ -25,12 +25,12 @@ namespace CheckoutService.Activities
                 req.ItemName);
 
             // Ensure that the store has items
-            InventoryItem item = await _client.GetStateAsync<InventoryItem>(
+            var product = await _client.GetStateAsync<InventoryItem>(
                 storeName,
                 req.ItemName.ToLowerInvariant());
 
             // Catch for the case where the statestore isn't setup
-            if (item == null)
+            if (product == null)
             {
                 // Not enough items.
                 return new InventoryResult(false, null, 0);
@@ -38,21 +38,21 @@ namespace CheckoutService.Activities
 
             _logger.LogInformation(
                 "There are {quantity} {name} available for purchase",
-                item.Quantity,
-                item.Name);
+                product.Quantity,
+                product.Name);
 
-            var totalCost = item.PerItemCost * req.Quantity;
+            var totalCost = product.PerItemCost * req.Quantity;
             // See if there're enough items to purchase
-            if (item.Quantity >= req.Quantity)
+            if (product.Quantity >= req.Quantity)
             {
                 // Simulate slow processing
-                await Task.Delay(TimeSpan.FromSeconds(2));
+                await Task.Delay(TimeSpan.FromSeconds(3));
                 
-                return new InventoryResult(true, item, totalCost);
+                return new InventoryResult(true, product, totalCost);
             }
 
             // Not enough items.
-            return new InventoryResult(false, item, totalCost);
+            return new InventoryResult(false, product, totalCost);
         }
     }
 }

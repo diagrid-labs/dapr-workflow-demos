@@ -38,9 +38,9 @@ public class InventoryController : ControllerBase
     {
         var baseInventory = new List<InventoryItem>
         {
-            new InventoryItem(Name: itemKeys[0], PerItemCost: 5, Quantity: 100),
-            new InventoryItem(Name: itemKeys[1], PerItemCost: 15000, Quantity: 100),
-            new InventoryItem(Name: itemKeys[2], PerItemCost: 500, Quantity: 100),
+            new InventoryItem(ProductId: 1, Name: itemKeys[0], PerItemCost: 5, Quantity: 100),
+            new InventoryItem(ProductId: 2, Name: itemKeys[1], PerItemCost: 15000, Quantity: 100),
+            new InventoryItem(ProductId: 3, Name: itemKeys[2], PerItemCost: 500, Quantity: 100),
         };
 
         foreach (var item in baseInventory)
@@ -56,9 +56,9 @@ public class InventoryController : ControllerBase
     {
         var baseInventory = new List<InventoryItem>
         {
-            new InventoryItem(Name: itemKeys[0], PerItemCost: 5, Quantity: 0),
-            new InventoryItem(Name: itemKeys[1], PerItemCost: 15000, Quantity: 0),
-            new InventoryItem(Name: itemKeys[2], PerItemCost: 500, Quantity: 0),
+            new InventoryItem(ProductId: 1, Name: itemKeys[0], PerItemCost: 5, Quantity: 0),
+            new InventoryItem(ProductId: 2, Name: itemKeys[1], PerItemCost: 15000, Quantity: 0),
+            new InventoryItem(ProductId: 3, Name: itemKeys[2], PerItemCost: 500, Quantity: 0),
         };
 
         foreach (var item in baseInventory)
@@ -66,6 +66,6 @@ public class InventoryController : ControllerBase
             await _client.SaveStateAsync(storeName, item.Name.ToLowerInvariant(), item);
         }
 
-        _logger.LogInformation("Cleared inventory !");
+        _logger.LogInformation("Cleared inventory!");
     }
 }

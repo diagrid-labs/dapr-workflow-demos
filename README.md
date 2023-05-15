@@ -361,7 +361,7 @@ The Checkout Workflow sample is a workflow that processes an order. The workflow
 
 - `NotifyActivity`: Notifies the customer of the progress of the order.
 - `CheckInventoryActivity`: Checks if the inventory is sufficient.
-- `ProcessPaymentActivity`: Processes the payment.
+- `ProcessPaymentActivity`: Processes the payment, by calling another Dapr service.
 - `UpdateInventoryActivity`: Updates the inventory after checking it again.
 - `RefundPaymentActivity`: Refunds the payment if the `UpdateInventoryActivity` throws an exception.
 
@@ -396,6 +396,30 @@ Next to the workflow, this application has an `InventoryController` with the fol
 - `POST http://localhost:5064/inventory/restock`: restocks the inventory
 
 The `InventoryController` also uses Dapr's state management building block.
+
+### Run the PaymentService app
+
+The CheckoutWorkflow relies on the PaymentService app to process the payment. The PaymentService app is a small ASP.NET app that exposes two endpoints:
+
+- `/pay`: processes the payment
+- `/refund`: refunds the payment
+
+This service will be started first before the CheckoutWorkflowSample app is started.
+
+1. Change to the PaymentService directory and build the ASP.NET app:
+
+    ```bash
+    cd PaymentService
+    dotnet build
+    ```
+
+2. Run the app using the Dapr CLI:
+
+    ```bash
+    dapr run --app-id payment --app-port 5063 --dapr-http-port 3501 dotnet run
+    ```
+
+    > Ensure the --app-port is the same as the port specified in the launchSettings.json file.
 
 ### Run the CheckoutWorkflowSample app
 

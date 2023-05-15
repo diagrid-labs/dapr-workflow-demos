@@ -23,6 +23,9 @@ namespace CheckoutService.Activities
                 req.Name,
                 req.TotalCost);
 
+            // Simulate slow processing
+            await Task.Delay(TimeSpan.FromSeconds(3));
+
             var request = _client.CreateInvokeMethodRequest(HttpMethod.Post, "payment", "refund", req);
             await _client.InvokeMethodAsync(request);
 

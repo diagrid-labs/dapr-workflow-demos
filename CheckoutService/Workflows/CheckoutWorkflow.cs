@@ -6,9 +6,9 @@ using Microsoft.DurableTask;
 
 namespace CheckoutService.Workflows
 {
-    public class CheckoutWorkflow : Workflow<OrderPayload, OrderResult>
+    public class CheckoutWorkflow : Workflow<OrderItem, CheckoutResult>
     {
-        public override async Task<OrderResult> RunAsync(WorkflowContext context, OrderPayload order)
+        public override async Task<CheckoutResult> RunAsync(WorkflowContext context, OrderItem order)
         {
             string orderId = context.InstanceId;
 
@@ -24,7 +24,7 @@ namespace CheckoutService.Workflows
                 inventoryRequest);
 
             // If there is insufficient inventory, fail and let the user know 
-            if (!inventoryResult.Success)
+            if (!inventoryResult.InStock)
             {
                 // End the workflow here since we don't have sufficient inventory
                 await context.CallActivityAsync(
@@ -32,7 +32,7 @@ namespace CheckoutService.Workflows
                     new Notification($"Insufficient inventory for {order.Name}"));
                 context.SetCustomStatus("Stopped order process due to insufficient inventory.");
 
-                return new OrderResult(Processed: false);
+                return new CheckoutResult(Processed: false);
             }
 
             var taskOptions = new TaskOptions(
@@ -60,7 +60,7 @@ namespace CheckoutService.Workflows
                         new PaymentRequest(RequestId: orderId, order.Name, inventoryResult.TotalCost));
                     context.SetCustomStatus("Stopped order process due to error in inventory update.");
 
-                    return new OrderResult(Processed: false);
+                    return new CheckoutResult(Processed: false);
                 }
             }
 
@@ -68,7 +68,7 @@ namespace CheckoutService.Workflows
                 nameof(NotifyActivity),
                 new Notification($"Order {orderId} has completed!"));
 
-            return new OrderResult(Processed: true);
+            return new CheckoutResult(Processed: true);
         }
     }
 }
