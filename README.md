@@ -230,9 +230,9 @@ graph TD
     C{counter < 10}
     D[End]
     A --> |"input: {counter}"| B
-    B -->|"output: Hi {counter}"| C
+    B -->|"output: {greeting} {counter}"| C
     C --> |"[Yes] {counter+=1}"| A
-    C -->|"[No] output: Konnichiwa 10"| D
+    C -->|"[No] output: {greeting} 10"| D
 
 ```
 
@@ -297,7 +297,7 @@ graph TD
     C([CreateTimer])
     D[CreateGreetingActivity]
     E[End]
-    A --> |"input: {name}"| B
+    A --> |"input: {date, name}"| B
     B -->|"[Yes]"| C
     C -->|"Wait"| A
     B -->|"[No] input: {name}"| D
