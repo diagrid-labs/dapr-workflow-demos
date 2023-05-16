@@ -357,11 +357,20 @@ graph TD
 
 ## CheckoutWorkflow sample
 
-The Checkout Workflow sample is a workflow that processes an order. The workflow takes an order payload as input and returns an order result as output. The workflow uses these activities:
+```mermaid
+flowchart LR
+A[CheckoutService]
+B[PaymentService]
+C[(Inventory DB)]
+A --> B
+A --> C
+```
+
+The Checkout Workflow sample is a workflow that processes an order. The workflow takes an `OrderItem` as input and returns a `CheckoutResult` as output. The workflow uses these activities:
 
 - `NotifyActivity`: Notifies the customer of the progress of the order.
 - `CheckInventoryActivity`: Checks if the inventory is sufficient.
-- `ProcessPaymentActivity`: Processes the payment, by calling another Dapr service.
+- `ProcessPaymentActivity`: Processes the payment, by calling another Dapr service (PaymentService).
 - `UpdateInventoryActivity`: Updates the inventory after checking it again.
 - `RefundPaymentActivity`: Refunds the payment if the `UpdateInventoryActivity` throws an exception.
 
@@ -378,16 +387,18 @@ graph TD
     BBB[NotifyActivity]
     XX{Sufficient Inventory?}
     Z[End]
-    A --> |OrderPayload| B --> C
+    A --> |OrderItem| B --> C
     C --> X
     X -->|Yes| D
-    X -->|"No - OrderResult(Processed:false)"| Z
+    X -->|"No - CheckoutResult(Processed:false)"| Z
     D --> E --> XX
-    XX -->|Yes| BB --> |"OrderResult(Processed:true)"| Z
-    XX -->|No| BBB --> F --> |"OrderResult(Processed:false)"| Z
+    XX -->|Yes| BB --> |"CheckoutResult(Processed:true)"| Z
+    XX -->|No| BBB --> F --> |"CheckoutResult(Processed:false)"| Z
 ```
 
 The `CheckInventoryActivity` and `UpdateInventoryActivity` classes use [Dapr's state management building block](https://docs.dapr.io/developing-applications/building-blocks/state-management/) to manage the inventory in a Redis state store.
+
+The `ProcessPaymentActivity` and `RefundPaymentActivity` call out to the PaymentService.
 
 Next to the workflow, this application has an `InventoryController` with the following endpoints:
 
@@ -399,7 +410,7 @@ The `InventoryController` also uses Dapr's state management building block.
 
 ### Run the PaymentService app
 
-The CheckoutWorkflow relies on the PaymentService app to process the payment. The PaymentService app is a small ASP.NET app that exposes two endpoints:
+The CheckoutWorkflowSample app relies on the PaymentService app to process the payment. The PaymentService app is a small ASP.NET app that exposes two endpoints:
 
 - `/pay`: processes the payment
 - `/refund`: refunds the payment
@@ -418,8 +429,6 @@ This service will be started first before the CheckoutWorkflowSample app is star
     ```bash
     dapr run --app-id payment --app-port 5063 --dapr-http-port 3501 dotnet run
     ```
-
-    > Ensure the --app-port is the same as the port specified in the launchSettings.json file.
 
 ### Run the CheckoutWorkflowSample app
 
