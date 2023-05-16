@@ -366,7 +366,7 @@ A --> B
 A --> C
 ```
 
-The Checkout Workflow sample is a workflow that processes an order. The workflow takes an `OrderItem` as input and returns a `CheckoutResult` as output. The workflow uses these activities:
+The CheckoutWorkflowSample app contains workflow that processes an order. The workflow takes an `OrderItem` as input and returns a `CheckoutResult` as output. The `CheckoutWorkflow` workflow uses these activities:
 
 - `NotifyActivity`: Notifies the customer of the progress of the order.
 - `CheckInventoryActivity`: Checks if the inventory is sufficient.
