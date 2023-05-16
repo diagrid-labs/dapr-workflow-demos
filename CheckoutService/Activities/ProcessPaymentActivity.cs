@@ -13,7 +13,6 @@ namespace CheckoutService.Activities
         {
             _logger = loggerFactory.CreateLogger<ProcessPaymentActivity>();
             _client = client;
-            
         }
 
         public override async Task<object?> RunAsync(WorkflowActivityContext context, PaymentRequest req)
