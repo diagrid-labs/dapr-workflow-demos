@@ -6,5 +6,6 @@ namespace CheckoutService.Models
     public record InventoryRequest(string RequestId, string ItemName, int Quantity);
     public record InventoryResult(bool InStock, InventoryItem? OrderPayload, double TotalCost);
     public record PaymentRequest(string RequestId, string Name, double TotalCost);
+    public record PaymentResponse(string RequestId, bool IsPaymentSuccess);
     public record Notification(string Message);
 }

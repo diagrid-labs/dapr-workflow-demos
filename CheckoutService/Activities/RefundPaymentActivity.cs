@@ -4,7 +4,7 @@ using Dapr.Client;
 
 namespace CheckoutService.Activities
 {
-    public class RefundPaymentActivity : WorkflowActivity<PaymentRequest, object?>
+    public class RefundPaymentActivity : WorkflowActivity<PaymentRequest, PaymentResponse>
     {
         private readonly ILogger _logger;
         private readonly DaprClient _client;
@@ -15,25 +15,33 @@ namespace CheckoutService.Activities
             _logger = loggerFactory.CreateLogger<RefundPaymentActivity>();
         }
 
-        public override async Task<object?> RunAsync(WorkflowActivityContext context, PaymentRequest req)
+        public override async Task<PaymentResponse> RunAsync(WorkflowActivityContext context, PaymentRequest request)
         {
             _logger.LogInformation(
                 "Refunding payment: {requestId} for {name} at ${totalCost}",
-                req.RequestId,
-                req.Name,
-                req.TotalCost);
+                request.RequestId,
+                request.Name,
+                request.TotalCost);
 
             // Simulate slow processing
             await Task.Delay(TimeSpan.FromSeconds(3));
 
-            var request = _client.CreateInvokeMethodRequest(HttpMethod.Post, "payment", "refund", req);
-            await _client.InvokeMethodAsync(request);
-
-            _logger.LogInformation(
-                "Payment for request ID '{requestId}' refunded successfully",
-                req.RequestId);
-
-            return null;
+            var methodRequest = _client.CreateInvokeMethodRequest(HttpMethod.Post, "payment", "refund", request);
+            try
+            {
+                await _client.InvokeMethodAsync(methodRequest);
+                _logger.LogInformation(
+                    "Refund for request ID '{requestId}' processed successfully",
+                    request.RequestId);
+                return new PaymentResponse(request.RequestId, true);
+            }
+            catch (Exception)
+            {
+                _logger.LogWarning(
+                    "Refund for request ID '{requestId}' failed",
+                    request.RequestId);
+                return new PaymentResponse(request.RequestId, false);
+            }
         }
     }
 }

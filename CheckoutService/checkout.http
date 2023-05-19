@@ -18,7 +18,7 @@ POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/{{workflow_id}}/st
 Content-Type: application/json
 
 {
-    "input" : {"Name": "Paperclips", "Quantity": 100}
+    "input" : {"Name": "Paperclips", "Quantity": 25}
 }
 
 ### Get status

@@ -30,7 +30,7 @@
             "request": "launch",
             "preLaunchTask": "checkout debug",
             "postDebugTask": "checkout daprd-down",
-            "program": "${workspaceFolder}/CheckoutService/bin/Debug/net7.0/CheckoutWorkflowSample.dll",
+            "program": "${workspaceFolder}/CheckoutService/bin/Debug/net7.0/CheckoutService.dll",
             "args": [],
             "cwd": "${workspaceFolder}/CheckoutService",
             "stopAtEntry": false,
@@ -42,6 +42,29 @@
                 "ASPNETCORE_ENVIRONMENT": "Development",
                 "DAPR_HTTP_PORT": "3500",
                 "DAPR_GRPC_PORT": "50000"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/Views"
+            },
+        },
+        {
+            "name": "Payment",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "payment debug",
+            "postDebugTask": "payment daprd-down",
+            "program": "${workspaceFolder}/PaymentService/bin/Debug/net7.0/PaymentService.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/CheckoutService",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development",
+                "DAPR_HTTP_PORT": "3501",
+                "DAPR_GRPC_PORT": "50001"
             },
             "sourceFileMap": {
                 "/Views": "${workspaceFolder}/Views"

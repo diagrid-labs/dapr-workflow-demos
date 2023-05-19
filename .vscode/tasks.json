@@ -43,7 +43,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/CheckoutService/CheckoutWorkflowSample.csproj",
+                "${workspaceFolder}/CheckoutService/CheckoutService.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -55,7 +55,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/CheckoutService/CheckoutWorkflowSample.csproj",
+                "${workspaceFolder}/CheckoutService/CheckoutService.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -69,7 +69,43 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/CheckoutService/CheckoutWorkflowSample.csproj"
+                "${workspaceFolder}/CheckoutService/CheckoutService.csproj"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "PaymentService Build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}/PaymentService/PaymentService.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "PaymentService Publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "publish",
+                "${workspaceFolder}/PaymentService/PaymentService.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary"
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "PaymentService Watch",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "watch",
+                "run",
+                "--project",
+                "${workspaceFolder}/PaymentService/PaymentService.csproj"
             ],
             "problemMatcher": "$msCompile"
         },
@@ -93,12 +129,28 @@
             "appPort": 5064,
             "httpPort": 3500,
             "grpcPort": 50000,
+            "componentsPath" : "./Resources",
             "type": "dapr",
             "dependsOn": "CheckoutService Build"
         },
         {
             "label": "checkout daprd-down",
             "appId": "checkout",
+            "type": "daprd-down"
+        },
+        {
+            "label": "payment debug",
+            "appId": "payment",
+            "appPort": 5063,
+            "httpPort": 3501,
+            "grpcPort": 50001,
+            "resourcesPath" : "/PaymentService/Resources",
+            "type": "dapr",
+            "dependsOn": "PaymentService Build"
+        },
+        {
+            "label": "payment daprd-down",
+            "appId": "payment",
             "type": "daprd-down"
         }
     ]

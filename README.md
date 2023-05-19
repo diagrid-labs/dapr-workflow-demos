@@ -355,7 +355,7 @@ graph TD
         }
     ```
 
-## CheckoutWorkflow sample
+## CheckoutService sample
 
 ```mermaid
 flowchart LR
@@ -366,7 +366,7 @@ A --> B
 A --> C
 ```
 
-The CheckoutWorkflowSample app contains workflow that processes an order. The workflow takes an `OrderItem` as input and returns a `CheckoutResult` as output. The `CheckoutWorkflow` workflow uses these activities:
+The CheckoutService app contains workflow that processes an order. The workflow takes an `OrderItem` as input and returns a `CheckoutResult` as output. The `CheckoutWorkflow` workflow uses these activities:
 
 - `NotifyActivity`: Notifies the customer of the progress of the order.
 - `CheckInventoryActivity`: Checks if the inventory is sufficient.
@@ -410,12 +410,26 @@ The `InventoryController` also uses Dapr's state management building block.
 
 ### Run the PaymentService app
 
-The CheckoutWorkflowSample app relies on the PaymentService app to process the payment. The PaymentService app is a small ASP.NET app that exposes two endpoints:
+The CheckoutService app relies on the PaymentService app to process the payment. The PaymentService app is a small ASP.NET app that exposes two endpoints:
 
 - `/pay`: processes the payment
 - `/refund`: refunds the payment
 
-This service will be started first before the CheckoutWorkflowSample app is started.
+The PaymentService app uses the Dapr Configuration API to read the `isPaymentSuccess` configuration item from the configuration store (Redis). If the item key is not present, or if the item value is set to the string "true", the payment will be successful. If the item value is set to the string "false", the payment will fail. Use this setting to simulate a failed payment and check the workflow result.
+
+Setting the configuration item is done via the redis-cli in the dapr_redis docker container:
+
+```bash
+docker exec dapr_redis redis-cli MSET isPaymentSuccess "true"
+```
+
+To configure the PaymentService to return a failed payment response use:
+
+```bash
+docker exec dapr_redis redis-cli MSET isPaymentSuccess "false"
+```
+
+Set the `isPaymentSuccess` config item to "true" and start the PaymentService as follows:
 
 1. Change to the PaymentService directory and build the ASP.NET app:
 
@@ -427,10 +441,10 @@ This service will be started first before the CheckoutWorkflowSample app is star
 2. Run the app using the Dapr CLI:
 
     ```bash
-    dapr run --app-id payment --app-port 5063 --dapr-http-port 3501 dotnet run
+    dapr run --app-id payment --app-port 5063 --dapr-http-port 3501 --resources-path ./Resources dotnet run
     ```
 
-### Run the CheckoutWorkflowSample app
+### Run the CheckoutService app
 
 1. Change to the CheckoutService directory and build the ASP.NET app:
 
@@ -519,7 +533,7 @@ This service will be started first before the CheckoutWorkflowSample app is star
     ```bash
     curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234d/start \
      -H "Content-Type: application/json" \
-     -d '{ "input" : {"Name": "Paperclips", "Quantity": 100}}'
+     -d '{ "input" : {"Name": "Paperclips", "Quantity": 25}}'
     ```
 
     > Note that `1234d` in the URL is the workflow instance ID. This can be any string you want.
@@ -550,7 +564,7 @@ This service will be started first before the CheckoutWorkflowSample app is star
         "start_time": "2023-05-01T12:22:25Z",
         "metadata": {
             "dapr.workflow.custom_status": "",
-            "dapr.workflow.input": "{\"Name\":\"Paperclips\",\"Quantity\":100}",
+            "dapr.workflow.input": "{\"Name\":\"Paperclips\",\"Quantity\":25}",
             "dapr.workflow.last_updated": "2023-05-01T12:22:37Z",
             "dapr.workflow.name": "CheckoutWorkflow",
             "dapr.workflow.output": "{\"Processed\":true}",
@@ -562,6 +576,16 @@ This service will be started first before the CheckoutWorkflowSample app is star
 9. Inspect the logs in ZipKin: [`localhost:9411/zipkin`](http://localhost:9411/zipkin). Find the entry marked `checkout:create_orchestration||checkoutworkflow` and show the details. You'll now see a timeline of the workflow at the top, and the activities underneath.
 
     ![Checkout workflow in Zipkin](images/checkout_zipkin.png)
+
+### Unhappy paths
+
+Now try these different scenarios and check the workflow result.
+
+Start the CheckoutWorkflow with:
+
+1. Shutting down the CheckoutService app once the CheckoutWorkflow has started. Restart the CheckoutService and watch the logs.
+2. A failing payment (set the `isPaymentSuccess` configuration item to "false").
+3. Shut down the PaymentService completely (check the logs for the retry attempts).
 
 ## Resources
 
