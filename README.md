@@ -434,7 +434,7 @@ docker exec dapr_redis redis-cli MSET isPaymentSuccess "false"
 
 Set the `isPaymentSuccess` config item to "true" and start the PaymentService as follows:
 
-1. Change to the PaymentService directory and build the ASP.NET app:
+1. Open a new terminal, change to the PaymentService directory and build the ASP.NET app:
 
     ```bash
     cd PaymentService
@@ -449,7 +449,7 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
 
 ### Run the CheckoutService app
 
-1. Change to the CheckoutService directory and build the ASP.NET app:
+1. Open a new terminal, change to the CheckoutService directory and build the ASP.NET app:
 
     ```bash
     cd CheckoutService
