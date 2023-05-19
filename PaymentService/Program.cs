@@ -24,11 +24,13 @@ app.MapPost("/pay", async (PaymentRequest request) =>
     if (isPaymentSuccess)
     {
         Console.WriteLine("Payment successful : " + request.RequestId);
+
         return Results.Accepted();
     }
     else
     {
         Console.WriteLine("Payment failed : " + request.RequestId);
+
         return Results.BadRequest();
     }
 });
@@ -40,11 +42,13 @@ app.MapPost("/refund", async (RefundRequest request) =>
     if (isPaymentSuccess)
     {
         Console.WriteLine("Refund successful : " + request.RequestId);
+
         return Results.Accepted();
     }
     else
     {
         Console.WriteLine("Refund failed : " + request.RequestId);
+
         return Results.BadRequest();
     }
 });
@@ -61,11 +65,14 @@ async Task<bool> GetConfigItemAsync()
         {
             Console.WriteLine("Can't parse isPaymentSuccessItem to boolean.");
         }
+
         return isPaymentSuccess;
     }
     else
     {
         Console.WriteLine("isPaymentSuccessItem not found");
+
+        //default to true so the happy path of the CheckoutWorkflow always works.
         return true;
     }
 }

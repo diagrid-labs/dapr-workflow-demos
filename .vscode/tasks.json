@@ -43,7 +43,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/CheckoutService/CheckoutWorkflowSample.csproj",
+                "${workspaceFolder}/CheckoutService/CheckoutService.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -55,7 +55,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/CheckoutService/CheckoutWorkflowSample.csproj",
+                "${workspaceFolder}/CheckoutService/CheckoutService.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -69,7 +69,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/CheckoutService/CheckoutWorkflowSample.csproj"
+                "${workspaceFolder}/CheckoutService/CheckoutService.csproj"
             ],
             "problemMatcher": "$msCompile"
         },

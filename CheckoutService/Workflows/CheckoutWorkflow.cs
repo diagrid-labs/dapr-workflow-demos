@@ -1,8 +1,7 @@
+using Microsoft.DurableTask;
 using Dapr.Workflow;
-
 using CheckoutService.Activities;
 using CheckoutService.Models;
-using Microsoft.DurableTask;
 
 namespace CheckoutService.Workflows
 {
@@ -19,7 +18,7 @@ namespace CheckoutService.Workflows
 
             // Determine if there is enough of the item available for purchase by checking the inventory
             var inventoryRequest = new InventoryRequest(RequestId: orderId, order.Name, order.Quantity);
-            InventoryResult inventoryResult = await context.CallActivityAsync<InventoryResult>(
+            var inventoryResult = await context.CallActivityAsync<InventoryResult>(
                 nameof(CheckInventoryActivity),
                 inventoryRequest);
 
@@ -35,12 +34,20 @@ namespace CheckoutService.Workflows
                 return new CheckoutResult(Processed: false);
             }
 
+            // Create a RetryPolicy to retry calling the ProcessPaymentActivity in case it fails. 
             var taskOptions = new TaskOptions(
                 new TaskRetryOptions(
                     new RetryPolicy(10, TimeSpan.FromSeconds(1), 2)));
-            await context.CallActivityAsync(
+            var paymentResponse = await context.CallActivityAsync<PaymentResponse>(
                 nameof(ProcessPaymentActivity),
                 new PaymentRequest(orderId, order.Name, inventoryResult.TotalCost), taskOptions);
+
+            if (!paymentResponse.IsPaymentSuccess)
+            {
+                context.SetCustomStatus("Stopped order process due to payment issue.");
+
+                return new CheckoutResult(Processed: false);
+            }
 
             try
             {

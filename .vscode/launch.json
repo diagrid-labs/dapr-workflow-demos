@@ -30,7 +30,7 @@
             "request": "launch",
             "preLaunchTask": "checkout debug",
             "postDebugTask": "checkout daprd-down",
-            "program": "${workspaceFolder}/CheckoutService/bin/Debug/net7.0/CheckoutWorkflowSample.dll",
+            "program": "${workspaceFolder}/CheckoutService/bin/Debug/net7.0/CheckoutService.dll",
             "args": [],
             "cwd": "${workspaceFolder}/CheckoutService",
             "stopAtEntry": false,
