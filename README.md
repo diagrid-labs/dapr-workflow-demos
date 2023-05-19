@@ -381,6 +381,7 @@ graph TD
     C[CheckInventoryActivity]
     X{Sufficient Inventory?}
     D[ProcessPaymentActivity]
+    P{Payment successful?}
     E[UpdateInventoryActivity]
     F[RefundPaymentActivity]
     BB[NotifyActivity]
@@ -389,11 +390,13 @@ graph TD
     Z[End]
     A --> |OrderItem| B --> C
     C --> X
-    X -->|Yes| D
-    X -->|"No - CheckoutResult(Processed:false)"| Z
-    D --> E --> XX
-    XX -->|Yes| BB --> |"CheckoutResult(Processed:true)"| Z
-    XX -->|No| BBB --> F --> |"CheckoutResult(Processed:false)"| Z
+    X -->|"[Yes]"| D
+    X -->|"[No] CheckoutResult(Processed:false)"| Z
+    D --> P
+    P -->|"[Yes]"| E --> XX
+    P -->|"[No] CheckoutResult(Processed:false)"| Z
+    XX -->|"[Yes]"| BB --> |"CheckoutResult(Processed:true)"| Z
+    XX -->|"[No]"| BBB --> F --> |"CheckoutResult(Processed:false)"| Z
 ```
 
 The `CheckInventoryActivity` and `UpdateInventoryActivity` classes use [Dapr's state management building block](https://docs.dapr.io/developing-applications/building-blocks/state-management/) to manage the inventory in a Redis state store.
