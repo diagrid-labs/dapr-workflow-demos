@@ -5,78 +5,73 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
-var client = new DaprClientBuilder().Build();
+// Dapr uses a random port for gRPC by default. If we don't know what that port
+// is (because this app was started separate from dapr), then assume 50001.
+if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DAPR_GRPC_PORT")))
+{
+    Environment.SetEnvironmentVariable("DAPR_GRPC_PORT", "50001");
+}
+
+var daprClient = new DaprClientBuilder().Build();
+//await client.WaitForSidecarAsync();
 const string CONFIG_STORE_NAME = "configstore";
-var configItems = new List<string> { "isPaymentSuccess" };
+const string configKey = "isPaymentSuccess";
+var configItems = new List<string> { configKey };
 string subscriptionId = string.Empty;
-bool isPaymentSuccess = true;
 
-await SubscribeConfiguration();
+using (var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+{
+    await daprClient.WaitForSidecarAsync(tokenSource.Token);
+}
 
-app.MapPost("/pay", (PaymentRequest request) =>
+app.MapPost("/pay", async (PaymentRequest request) =>
 {
     Console.WriteLine("PaymentRequest received : " + request.RequestId);
-    //return request.RequestId;
-    // return a 202 Accepted response
-    return Results.Accepted();
+    bool isPaymentSuccess = await GetConfigItemAsync();
+    if (isPaymentSuccess)
+    {
+        return Results.Accepted();
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
 });
 
-app.MapPost("/refund", (RefundRequest request) =>
+app.MapPost("/refund", async (RefundRequest request) =>
 {
     Console.WriteLine("RefundRequest received : " + request.RequestId);
-    return request.RequestId;
+    bool isPaymentSuccess = await GetConfigItemAsync();
+    if (isPaymentSuccess)
+    {
+        return Results.Accepted();
+    }
+    else
+    {
+        return Results.BadRequest();
+    }
 });
 
-app.Run();
+await app.RunAsync();
 
 
-async Task SubscribeConfiguration()
+async Task<bool> GetConfigItemAsync()
 {
-    // Get config from configuration store
-    GetConfigurationResponse config = await client.GetConfiguration(CONFIG_STORE_NAME, configItems);
-    if (config.Items.TryGetValue("isPaymentSuccess", out var isPaymentSuccessItem))
+    var config = await daprClient.GetConfiguration(CONFIG_STORE_NAME, configItems);
+    if (config.Items.TryGetValue(configKey, out var isPaymentSuccessItem))
     {
-        if (!bool.TryParse(isPaymentSuccessItem.Value, out isPaymentSuccess))
+        if (!bool.TryParse(isPaymentSuccessItem.Value, out bool isPaymentSuccess))
         {
             Console.WriteLine("Can't parse isPaymentSuccessItem to boolean.");
         }
+        return isPaymentSuccess;
     }
     else
     {
         Console.WriteLine("isPaymentSuccessItem not found");
-    }
-
-    // Subscribe for configuration changes
-    var subscribe = await client.SubscribeConfiguration(CONFIG_STORE_NAME, configItems);
-
-    // Print configuration changes
-    await foreach (var configItem in subscribe.Source)
-    {
-        // First invocation when app subscribes to config changes only returns subscription id
-        if (configItem.Keys.Count == 0)
-        {
-            Console.WriteLine("App subscribed to config changes with subscription id: " + subscribe.Id);
-            subscriptionId = subscribe.Id;
-            continue;
-        }
-        var cfg = System.Text.Json.JsonSerializer.Serialize(configItem);
-        Console.WriteLine("Configuration update " + cfg);
+        return true;
     }
 }
 
-// Unsubscribe to config updates and exit the app
-async Task Unsubscribe(string subscriptionId)
-{
-    try
-    {
-        await client.UnsubscribeConfiguration(CONFIG_STORE_NAME, subscriptionId);
-        Console.WriteLine("App unsubscribed from config changes");
-        Environment.Exit(0);
-    }
-    catch (Exception ex)
-    {
-        Console.WriteLine("Error unsubscribing from config updates: " + ex.Message);
-    }
-}
 public record PaymentRequest(string RequestId, string Name, double TotalCost);
 public record RefundRequest(string RequestId, string Name, double TotalCost);
