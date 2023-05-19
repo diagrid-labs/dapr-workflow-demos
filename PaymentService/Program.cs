@@ -13,16 +13,9 @@ if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DAPR_GRPC_PORT")))
 }
 
 var daprClient = new DaprClientBuilder().Build();
-//await client.WaitForSidecarAsync();
 const string CONFIG_STORE_NAME = "configstore";
 const string configKey = "isPaymentSuccess";
 var configItems = new List<string> { configKey };
-string subscriptionId = string.Empty;
-
-using (var tokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
-{
-    await daprClient.WaitForSidecarAsync(tokenSource.Token);
-}
 
 app.MapPost("/pay", async (PaymentRequest request) =>
 {
@@ -30,10 +23,12 @@ app.MapPost("/pay", async (PaymentRequest request) =>
     bool isPaymentSuccess = await GetConfigItemAsync();
     if (isPaymentSuccess)
     {
+        Console.WriteLine("Payment successful : " + request.RequestId);
         return Results.Accepted();
     }
     else
     {
+        Console.WriteLine("Payment failed : " + request.RequestId);
         return Results.BadRequest();
     }
 });
@@ -44,10 +39,12 @@ app.MapPost("/refund", async (RefundRequest request) =>
     bool isPaymentSuccess = await GetConfigItemAsync();
     if (isPaymentSuccess)
     {
+        Console.WriteLine("Refund successful : " + request.RequestId);
         return Results.Accepted();
     }
     else
     {
+        Console.WriteLine("Refund failed : " + request.RequestId);
         return Results.BadRequest();
     }
 });
