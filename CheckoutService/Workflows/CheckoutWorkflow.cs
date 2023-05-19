@@ -57,6 +57,8 @@ namespace CheckoutService.Workflows
             }
             catch (Exception ex)
             {
+                // Catching this inner exception is a temp workaround when using Dapr 1.10.
+                // A different outer exception will be used in Dapr v1.11 that makes it cleaner to work with.
                 if (ex.InnerException is DurableTask.Core.Exceptions.TaskFailedException)
                 {
                     await context.CallActivityAsync(
