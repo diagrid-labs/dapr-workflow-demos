@@ -34,7 +34,7 @@ graph TD
 2. Run the app using the Dapr CLI:
 
     ```bash
-    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 dotnet run
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 --resources-path ./ResourcesLocal dotnet run
     ```
 
     > Ensure the --app-port is the same as the port specified in the launchSettings.json file.
@@ -103,7 +103,7 @@ graph TD
     ```bash
     cd BasicWorkflowSamples
     dotnet build
-    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 dotnet run
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 --resources-path ./ResourcesLocal dotnet run
     ```
 
 2. Start the `ChainingWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
@@ -174,7 +174,7 @@ graph TD
     ```bash
     cd BasicWorkflowSamples
     dotnet build
-    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 dotnet run
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 --resources-path ./ResourcesLocal dotnet run
     ```
 
 2. Start the `FanOutFanInWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
@@ -233,7 +233,6 @@ graph TD
     B -->|"output: {greeting} {counter}"| C
     C --> |"[Yes] {counter+=1}"| A
     C -->|"[No] output: {greeting} 10"| D
-
 ```
 
 1. Ensure that the BasicWorkflowSamples app is still running, if not change to the BasicWorkflowSamples directory, build the app, and run the app using the Dapr CLI:
@@ -241,7 +240,7 @@ graph TD
     ```bash
     cd BasicWorkflowSamples
     dotnet build
-    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 dotnet run
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 --resources-path ./ResourcesLocal dotnet run
     ```
 
 2. Start the `ContinueAsNewWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
@@ -310,7 +309,7 @@ graph TD
     ```bash
     cd BasicWorkflowSamples
     dotnet build
-    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 dotnet run
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 --resources-path ./Resources dotnet run
     ```
 
 2. Start the `TimerWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
