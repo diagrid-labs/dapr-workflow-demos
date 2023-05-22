@@ -9,7 +9,7 @@ POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/{{workflow_id}}/
 Content-Type: application/json
 
 {
-    "input" : "Marc"
+    "input" : "World"
 }
 
 ### Get status for Hello World workflow
