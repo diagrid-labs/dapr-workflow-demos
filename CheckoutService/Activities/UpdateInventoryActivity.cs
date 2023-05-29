@@ -25,7 +25,7 @@ namespace CheckoutService.Activities
                 req.ItemName);
 
             // Simulate slow processing
-            await Task.Delay(TimeSpan.FromSeconds(3));
+            await Task.Delay(TimeSpan.FromSeconds(5));
 
             // Determine if there are enough Items for purchase
             var product = await _client.GetStateAsync<InventoryItem>(

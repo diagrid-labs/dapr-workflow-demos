@@ -3,11 +3,11 @@
 ### Get inventory
 GET {{app_url}}/inventory
 
-### Clear inventory
-DELETE {{app_url}}/inventory
-
 ### Restock inventory
 POST {{app_url}}/inventory/restock
+
+### Clear inventory
+DELETE {{app_url}}/inventory
 
 ### Run workflow
 @dapr_url=http://localhost:3500 
