@@ -5,77 +5,71 @@
 ### Run Hello World workflow
 ###
 // @name wfrequest
-POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/{{workflow_id}}/start
-Content-Type: application/json
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/start?instanceID={{workflow_id}}
+Content-Type: application/text/plain
 
-{
-    "input" : "World"
-}
+"World"
+
 
 ### Get status for Hello World workflow
-@workflow_helloworld_id_response={{wfrequest.response.body.instance_id}}
-GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/{{workflow_helloworld_id_response}}
+@workflow_helloworld_id_response={{wfrequest.response.body.instanceID}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_helloworld_id_response}}
 
 ###
 ### Run Chaining workflow
 ### 
 // @name wfchainingrequest
-POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/ChainingWorkflow/{{workflow_id}}/start
-Content-Type: application/json
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/ChainingWorkflow/start?instanceID={{workflow_id}}
+Content-Type: application/text/plain
 
-{
-    "input" : "World"
-}
+"World"
 
 ### Get status for Chaining workflow
-@workflow_chaining_id_response={{wfchainingrequest.response.body.instance_id}}
-GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/ChainingWorkflow/{{workflow_chaining_id_response}}
+@workflow_chaining_id_response={{wfchainingrequest.response.body.instanceID}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_chaining_id_response}}
 
 ###
 ### Run FanOutFanIn workflow
 ### 
 // @name wfchainingrequest
-POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/{{workflow_id}}/start
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/json
 
-{
-    "input" : [
-        "Amsterdam",
-        "Chicago",
-        "New York"
-    ]
-}
+[
+    "Amsterdam",
+    "Chicago",
+    "New York"
+]
 
 ### Get status for FanOutFanIn workflow
-@workflow_chaining_id_response={{wfchainingrequest.response.body.instance_id}}
-GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/{{workflow_chaining_id_response}}
+@workflow_chaining_id_response={{wfchainingrequest.response.body.instanceID}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_chaining_id_response}}
 
 ###
 ### Run ContinueAsNew workflow
 ### 
 // @name wfcontinuerequest
-POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/{{workflow_id}}/start
-Content-Type: application/json
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/start?instanceID={{workflow_id}}
+Content-Type: application/text/plain
 
-{
-    "input" : 0
-}
+0
 
 ### Get status for ContinueAsNew workflow
-@workflow_continue_id_response={{wfcontinuerequest.response.body.instance_id}}
-GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/{{workflow_continue_id_response}}
+@workflow_continue_id_response={{wfcontinuerequest.response.body.instanceID}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_continue_id_response}}
 
 ###
 ### Run Timer workflow
 ### 
 // @name wftimerrequest
-POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/TimerWorkflow/{{workflow_id}}/start
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/TimerWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/json
 
 {
-    "input" : { "DateTime": "2023-05-29T13:44:00+00:00", "Name": "World" }
+    "DateTime": "2023-05-29T13:44:00+00:00",
+    "Name": "World"
 }
 
 ### Get status for Timer workflow
-@workflow_timer_id_response={{wftimerrequest.response.body.instance_id}}
-GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/TimerWorkflow/{{workflow_timer_id_response}}
+@workflow_timer_id_response={{wftimerrequest.response.body.instanceID}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_timer_id_response}}

@@ -14,13 +14,14 @@ DELETE {{app_url}}/inventory
 @workflow_id={{$guid}}
 
 // @name wfrequest
-POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/{{workflow_id}}/start
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/json
 
 {
-    "input" : {"Name": "Paperclips", "Quantity": 25}
+    "Name": "Paperclips",
+    "Quantity": 25
 }
 
 ### Get status
-@workflow_id_response={{wfrequest.response.body.instance_id}}
-GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/{{workflow_id_response}}
+@workflow_id_response={{wfrequest.response.body.instanceID}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_id_response}}

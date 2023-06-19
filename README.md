@@ -42,9 +42,9 @@ graph TD
 3. Start the `HelloWorldWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/1234a/start \
-     -H "Content-Type: application/json" \
-     -d '{ "input" : "Marc"}'
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/start?instanceID=1234a \
+     -H "Content-Type: application/text/plain" \
+     -d '"World"'
     ```
 
     > Note that `1234a` in the URL is the workflow instance ID. This can be any string you want.
@@ -53,33 +53,31 @@ graph TD
 
     ```json
     {
-        "instance_id": "<WORKFLOW_ID>"
+        "instanceID": "<WORKFLOW_ID>"
     }
     ```
 
 4. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/1234a/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234a
     ```
 
     Expected result:
 
     ```json
     {
-        "WFInfo": {
-            "instance_id": "<WORKFLOW_ID>"
-        },
-        "start_time": "2023-05-01T12:15:45Z",
-        "metadata": {
-            "dapr.workflow.custom_status": "",
-            "dapr.workflow.input": "\"Marc"\",
-            "dapr.workflow.last_updated": "2023-05-01T12:15:45Z",
-            "dapr.workflow.name": "HelloWorldWorkflow",
-            "dapr.workflow.output": "\"Hi Marc"\",
-            "dapr.workflow.runtime_status": "COMPLETED"
-        }
+    "instanceID": "<WORKFLOW_ID>",
+    "workflowName": "HelloWorldWorkflow",
+    "createdAt": "2023-06-19T13:19:18.316956600Z",
+    "lastUpdatedAt": "2023-06-19T13:19:18.333226200Z",
+    "runtimeStatus": "COMPLETED",
+    "properties": {
+        "dapr.workflow.custom_status": "",
+        "dapr.workflow.input": "\"World\"",
+        "dapr.workflow.output": "\"Ciao World\""
     }
+}
     ```
 
 ## Chaining workflow sample
@@ -109,9 +107,9 @@ graph TD
 2. Start the `ChainingWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ChainingWorkflow/1234b/start \
-     -H "Content-Type: application/json" \
-     -d '{ "input" : "Marc"}'
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ChainingWorkflow/start?instanceID=1234b \
+     -H "Content-Type: application/text/plain" \
+     -d '"Marc"'
     ```
 
     > Note that `1234b` in the URL is the workflow instance ID. This can be any string you want.
@@ -120,31 +118,29 @@ graph TD
 
     ```json
     {
-        "instance_id": "<WORKFLOW_ID>"
+        "instanceID": "<WORKFLOW_ID>"
     }
     ```
 
 3. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/ChainingWorkflow/1234b/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234b
     ```
 
     Expected result:
 
     ```json
     {
-        "WFInfo": {
-            "instance_id": "<WORKFLOW_ID>"
-        },
-        "start_time": "2023-05-10T12:07:38Z",
-        "metadata": {
-            "dapr.workflow.custom_status": "",
-            "dapr.workflow.input": "\"Marc\"",
-            "dapr.workflow.last_updated": "2023-05-10T12:07:38Z",
-            "dapr.workflow.name": "ChainingWorkflow",
-            "dapr.workflow.output": "\"Ciao Hi Bonjour Marc\"",
-            "dapr.workflow.runtime_status": "COMPLETED"
+    "instanceID": "<WORKFLOW_ID>",
+    "workflowName": "ChainingWorkflow",
+    "createdAt": "2023-06-19T13:21:08.611149200Z",
+    "lastUpdatedAt": "2023-06-19T13:21:08.647482Z",
+    "runtimeStatus": "COMPLETED",
+    "properties": {
+        "dapr.workflow.custom_status": "",
+        "dapr.workflow.input": "\"World\"",
+        "dapr.workflow.output": "\"Hello Hi Konnichiwa World\""
         }
     }
     ```
@@ -180,9 +176,9 @@ graph TD
 2. Start the `FanOutFanInWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/1234c/start \
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/start?instanceID=1234c \
      -H "Content-Type: application/json" \
-     -d '{ "input" : ["Alice", "Kendall", "Sam"]"}'
+     -d '["Amsterdam", "Chicago", "New York"]'
     ```
 
     > Note that `1234c` in the URL is the workflow instance ID. This can be any string you want.
@@ -191,32 +187,31 @@ graph TD
 
     ```json
     {
-        "instance_id": "<WORKFLOW_ID>"
+        "instanceID": "<WORKFLOW_ID>"
     }
     ```
 
 3. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/1234c/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234c
     ```
 
     Expected result:
 
     ```json
     {
-        "WFInfo": {
-            "instance_id": "<WORKFLOW_ID>"
-        },
-        "start_time": "2023-05-14T16:29:53Z",
-        "metadata": {
-            "dapr.workflow.custom_status": "",
-            "dapr.workflow.input": "[\"Alice\",\"Kendall\",\"Sam\"]",
-            "dapr.workflow.last_updated": "2023-05-14T16:29:54Z",
-            "dapr.workflow.name": "FanOutFanInWorkflow",
-            "dapr.workflow.output": "[\"Guten Tag Alice\",\"Hi Kendall\",\"Hello Sam\"]",
-            "dapr.workflow.runtime_status": "COMPLETED"
+    "instanceID": "<WORKFLOW_ID>",
+    "workflowName": "FanOutFanInWorkflow",
+    "createdAt": "2023-06-19T13:22:42.056622400Z",
+    "lastUpdatedAt": "2023-06-19T13:22:42.093666600Z",
+    "runtimeStatus": "COMPLETED",
+    "properties": {
+        "dapr.workflow.custom_status": "",
+        "dapr.workflow.input": "[\"Amsterdam\",\"Chicago\",\"New York\"]",
+        "dapr.workflow.output": "[\"Hi Amsterdam\",\"Hola Chicago\",\"Guten Tag New York\"]"
         }
+    }
     ```
 
 ## ContinueAsNew sample
@@ -246,9 +241,9 @@ graph TD
 2. Start the `ContinueAsNewWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/1234d/start \
-     -H "Content-Type: application/json" \
-     -d '{ "input" : 0}'
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/start?instanceID=1234d \
+     -H "Content-Type: application/text/plain" \
+     -d '0'
     ```
 
     > Note that `1234d` in the URL is the workflow instance ID. This can be any string you want.
@@ -257,32 +252,31 @@ graph TD
 
     ```json
     {
-        "instance_id": "<WORKFLOW_ID>"
+        "instanceID": "<WORKFLOW_ID>"
     }
     ```
 
 3. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/1234d/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234d
     ```
 
     Expected result:
 
     ```json
-    {
-        "WFInfo": {
-            "instance_id": "<WORKFLOW_ID>"
-        },
-        "start_time": "2023-05-14T16:29:53Z",
-        "metadata": {
-            "dapr.workflow.custom_status": "",
-            "dapr.workflow.input": "0",
-            "dapr.workflow.last_updated": "2023-05-14T16:29:54Z",
-            "dapr.workflow.name": "ContinueAsNewWorkflow",
-            "dapr.workflow.output": "\"Konnichiwa 10\"",
-            "dapr.workflow.runtime_status": "COMPLETED"
-        }
+{
+  "instanceID": "<WORKFLOW_ID>",
+  "workflowName": "ContinueAsNewWorkflow",
+  "createdAt": "2023-06-19T13:24:23.004744700Z",
+  "lastUpdatedAt": "2023-06-19T13:24:23.016307900Z",
+  "runtimeStatus": "COMPLETED",
+  "properties": {
+    "dapr.workflow.custom_status": "",
+    "dapr.workflow.input": "10",
+    "dapr.workflow.output": "\"Hey 10\""
+  }
+}
     ```
 
 ## Timer sample
@@ -315,9 +309,9 @@ graph TD
 2. Start the `TimerWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/TimerWorkflow/1234e/start \
-     -H "Content-Type: application/json" \
-     -d '{ "input" : "Marc"}'
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/TimerWorkflow/start?instanceID=1234e \
+     -H "Content-Type: application/text/plain" \
+     -d '"Marc"'
     ```
 
     > Note that `1234e` in the URL is the workflow instance ID. This can be any string you want.
@@ -326,32 +320,31 @@ graph TD
 
     ```json
     {
-        "instance_id": "<WORKFLOW_ID>"
+        "instanceID": "<WORKFLOW_ID>"
     }
     ```
 
 3. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/TimerWorkflow/1234e/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234e
     ```
 
     Expected result:
 
     ```json
     {
-        "WFInfo": {
-            "instance_id": "<WORKFLOW_ID>"
-        },
-        "start_time": "2023-05-14T16:29:53Z",
-        "metadata": {
-            "dapr.workflow.custom_status": "",
-            "dapr.workflow.input": "Marc",
-            "dapr.workflow.last_updated": "2023-05-14T16:29:54Z",
-            "dapr.workflow.name": "TimerWorkflow",
-            "dapr.workflow.output": "\"Konnichiwa Marc\"",
-            "dapr.workflow.runtime_status": "COMPLETED"
-        }
+    "instanceID": "<WORKFLOW_ID>",
+    "workflowName": "TimerWorkflow",
+    "createdAt": "2023-06-19T13:25:59.745344700Z",
+    "lastUpdatedAt": "2023-06-19T13:25:59.768925500Z",
+    "runtimeStatus": "COMPLETED",
+    "properties": {
+        "dapr.workflow.custom_status": "",
+        "dapr.workflow.input": "{\"DateTime\": \"2023-05-29T13:44:00+00:00\", \"Name\": \"World\"}",
+        "dapr.workflow.output": "\"Guten Tag World at 2023-05-29 15:44:00\""
+    }
+    }
     ```
 
 ## CheckoutService sample
@@ -478,18 +471,18 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
 4. Try ordering 100 paperclips while the inventory is not sufficient. Start the `CheckoutWorkflow` via the Workflow HTTP API:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234e/start \
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/start?instanceID=1234f \
      -H "Content-Type: application/json" \
-     -d '{ "input" : {"Name": "Paperclips", "Quantity": 100}}'
+     -d '{"Name": "Paperclips", "Quantity": 100}'
     ```
 
-    > Note that `1234e` in the URL is the workflow instance ID. This can be any string you want.
+    > Note that `1234f` in the URL is the workflow instance ID. This can be any string you want.
 
     Expected result:
 
     ```json
     {
-        "instance_id": "<WORKFLOW_ID>"
+        "instanceID": "<WORKFLOW_ID>"
     }
     ```
 
@@ -498,24 +491,22 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
 5. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234e/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234f
     ```
 
     Expected result:
 
     ```json
     {
-        "WFInfo": {
-            "instance_id": "<WORKFLOW_ID>"
-        },
-        "start_time": "2023-05-01T12:15:45Z",
-        "metadata": {
-            "dapr.workflow.custom_status": "\"Stopped order process due to insufficient inventory.\"",
-            "dapr.workflow.input": "{\"Name\":\"Paperclips\",\"Quantity\":100}",
-            "dapr.workflow.last_updated": "2023-05-01T12:15:45Z",
-            "dapr.workflow.name": "CheckoutWorkflow",
-            "dapr.workflow.output": "{\"Processed\":false}",
-            "dapr.workflow.runtime_status": "COMPLETED"
+    "instanceID": "<WORKFLOW_ID>",
+    "workflowName": "CheckoutWorkflow",
+    "createdAt": "2023-06-19T13:37:30.261385700Z",
+    "lastUpdatedAt": "2023-06-19T13:37:30.303315100Z",
+    "runtimeStatus": "COMPLETED",
+    "properties": {
+        "dapr.workflow.custom_status": "\"Stopped order process due to insufficient inventory.\"",
+        "dapr.workflow.input": "{\"Name\": \"Paperclips\", \"Quantity\": 125}",
+        "dapr.workflow.output": "{\"Processed\":false}"
         }
     }
     ```
@@ -533,18 +524,18 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
 7. Try ordering paperclips again, now within the limits of the inventory. Start the `CheckoutWorkflow` via the Workflow HTTP API:
 
     ```bash
-    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234d/start \
+    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/start?instanceID=1234g \
      -H "Content-Type: application/json" \
-     -d '{ "input" : {"Name": "Paperclips", "Quantity": 25}}'
+     -d '{"Name": "Paperclips", "Quantity": 25}'
     ```
 
-    > Note that `1234d` in the URL is the workflow instance ID. This can be any string you want.
+    > Note that `1234g` in the URL is the workflow instance ID. This can be any string you want.
 
     Expected result:
 
     ```json
     {
-        "instance_id": "<WORKFLOW_ID>"
+        "instanceID": "<WORKFLOW_ID>"
     }
     ```
 
@@ -553,24 +544,22 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
 8. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/1234d/status
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234g
     ```
 
     Expected result:
 
     ```json
     {
-        "WFInfo": {
-            "instance_id": "<WORKFLOW_ID>"
-        },
-        "start_time": "2023-05-01T12:22:25Z",
-        "metadata": {
-            "dapr.workflow.custom_status": "",
-            "dapr.workflow.input": "{\"Name\":\"Paperclips\",\"Quantity\":25}",
-            "dapr.workflow.last_updated": "2023-05-01T12:22:37Z",
-            "dapr.workflow.name": "CheckoutWorkflow",
-            "dapr.workflow.output": "{\"Processed\":true}",
-            "dapr.workflow.runtime_status": "COMPLETED"
+    "instanceID": "<WORKFLOW_ID>",
+    "workflowName": "CheckoutWorkflow",
+    "createdAt": "2023-06-19T13:35:42.126109Z",
+    "lastUpdatedAt": "2023-06-19T13:35:53.644632200Z",
+    "runtimeStatus": "COMPLETED",
+    "properties": {
+        "dapr.workflow.custom_status": "",
+        "dapr.workflow.input": "{\"Name\": \"Paperclips\",\"Quantity\": 25}",
+        "dapr.workflow.output": "{\"Processed\":true}"
         }
     }
     ```
