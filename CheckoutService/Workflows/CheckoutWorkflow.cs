@@ -1,7 +1,7 @@
-using Microsoft.DurableTask;
-using Dapr.Workflow;
 using CheckoutService.Activities;
 using CheckoutService.Models;
+using Dapr.Workflow;
+using Microsoft.DurableTask;
 
 namespace CheckoutService.Workflows
 {
@@ -36,9 +36,8 @@ namespace CheckoutService.Workflows
             }
 
             // Create a RetryPolicy to retry calling the ProcessPaymentActivity in case it fails.
-            var taskOptions = new TaskOptions(
-                new TaskRetryOptions(
-                    new RetryPolicy(10, TimeSpan.FromSeconds(1), 2)));
+            var taskOptions = new WorkflowTaskOptions(
+                new WorkflowRetryPolicy(10, TimeSpan.FromSeconds(1), 2));
 
             // Process the payment (calls the PaymentService).
             var paymentResponse = await context.CallActivityAsync<PaymentResponse>(
@@ -65,26 +64,21 @@ namespace CheckoutService.Workflows
                     nameof(UpdateInventoryActivity),
                     inventoryRequest);
             }
-            catch (Exception ex)
+            catch (TaskFailedException)
             {
-                // Catching this inner exception is a temp workaround when using Dapr 1.10.
-                // A different outer exception will be used in Dapr v1.11 that makes it cleaner to work with.
-                if (ex.InnerException is DurableTask.Core.Exceptions.TaskFailedException)
-                {
-                    // The inventory is insufficient, notify the user,
-                    // perform the compensation action (refund), and end the workflow.
-                    await context.CallActivityAsync(
-                        nameof(NotifyActivity),
-                        new Notification($"Order {orderId} Failed! You are now getting a refund"));
+                // The inventory is insufficient, notify the user,
+                // perform the compensation action (refund), and end the workflow.
+                await context.CallActivityAsync(
+                    nameof(NotifyActivity),
+                    new Notification($"Order {orderId} Failed! You are now getting a refund"));
 
-                    await context.CallActivityAsync(
-                        nameof(RefundPaymentActivity),
-                        new PaymentRequest(RequestId: orderId, order.Name, inventoryResult.TotalCost));
+                await context.CallActivityAsync(
+                    nameof(RefundPaymentActivity),
+                    new PaymentRequest(RequestId: orderId, order.Name, inventoryResult.TotalCost));
 
-                    context.SetCustomStatus("Stopped order process due to error in inventory update.");
+                context.SetCustomStatus("Stopped order process due to error in inventory update.");
 
-                    return new CheckoutResult(Processed: false);
-                }
+                return new CheckoutResult(Processed: false);
             }
 
             await context.CallActivityAsync(
