@@ -6,6 +6,7 @@ Demos applications that use the Dapr Workflow building block.
 
 1. [.NET 7 SDK](https://dotnet.microsoft.com/download/dotnet/7.0)
 2. [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
+   - Ensure that you're using **v1.11** of the Dapr runtime and the CLI, since there have been [breaking changes](https://github.com/dapr/dapr/pull/6218) to the Workflow API from v1.10 to v1.11.
 3. A REST client, such as [cURL](https://curl.se/), or the VSCode [REST client extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client).
 
     > The VSCode REST client is configured as a recommended extension when opening this repo in VSCode.
