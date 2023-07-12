@@ -18,7 +18,7 @@ services:
     networks:
       - network
   workflow-dapr:
-    image: "daprio/daprd:1.10.7"
+    image: "daprio/daprd:1.11.0"
     command: ["./daprd",
      "-app-id", "basic-workflows",
      "-app-port", "5065",
@@ -36,7 +36,7 @@ services:
   # Dapr placement service
   ############################
   placement:
-    image: "daprio/dapr:1.10.7"
+    image: "daprio/dapr:1.11.0"
     command: ["./placement", "-port", "50006"]
     ports:
       - "50006:50006"
