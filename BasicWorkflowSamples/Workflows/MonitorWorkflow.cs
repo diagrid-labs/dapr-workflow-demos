@@ -2,7 +2,7 @@ using Dapr.Workflow;
 
 namespace BasicWorkflowSamples
 {
-    public class ContinueAsNewWorkflow : Workflow<int, string>
+    public class MonitorWorkflow : Workflow<int, string>
     {
         public override async Task<string> RunAsync(WorkflowContext context, int counter)
         {

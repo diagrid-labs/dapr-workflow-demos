@@ -46,15 +46,15 @@ Content-Type: application/json
 GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_chaining_id_response}}
 
 ###
-### Run ContinueAsNew workflow
+### Run Monitor workflow
 ### 
 // @name wfcontinuerequest
-POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/start?instanceID={{workflow_id}}
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/MonitorWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/text/plain
 
 0
 
-### Get status for ContinueAsNew workflow
+### Get status for Monitor workflow
 @workflow_continue_id_response={{wfcontinuerequest.response.body.instanceID}}
 GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_continue_id_response}}
 

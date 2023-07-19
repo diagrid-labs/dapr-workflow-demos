@@ -10,7 +10,7 @@ builder.Services.AddDaprWorkflow(options =>
     options.RegisterWorkflow<HelloWorldWorkflow>();
     options.RegisterWorkflow<ChainingWorkflow>();
     options.RegisterWorkflow<FanOutFanInWorkflow>();
-    options.RegisterWorkflow<ContinueAsNewWorkflow>();
+    options.RegisterWorkflow<MonitorWorkflow>();
     options.RegisterWorkflow<TimerWorkflow>();
 
     // These are the activities that get invoked by the workflow(s).

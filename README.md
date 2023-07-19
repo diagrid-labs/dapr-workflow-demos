@@ -217,9 +217,9 @@ graph TD
     }
     ```
 
-## ContinueAsNew sample
+## Monitor sample
 
-The ContinueAsNew sample is a workflow with a numeric input (counter) and restarts the workflow (with an updated counter) until the counter reaches 10. The workflow diagram is as follows:
+The Monitor sample is a workflow with a numeric input (counter) and restarts the workflow (with an updated counter) until the counter reaches 10. The workflow diagram is as follows:
 
 ```mermaid
 graph TD
@@ -241,10 +241,10 @@ graph TD
     dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 --resources-path ./ResourcesLocal dotnet run
     ```
 
-2. Start the `ContinueAsNewWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
+2. Start the `MonitorWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ContinueAsNewWorkflow/start?instanceID=1234d \
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/MonitorWorkflow/start?instanceID=1234d \
      -H "Content-Type: application/text/plain" \
      -d '0'
     ```
@@ -270,7 +270,7 @@ graph TD
     ```json
 {
   "instanceID": "<WORKFLOW_ID>",
-  "workflowName": "ContinueAsNewWorkflow",
+  "workflowName": "MonitorWorkflow",
   "createdAt": "2023-06-19T13:24:23.004744700Z",
   "lastUpdatedAt": "2023-06-19T13:24:23.016307900Z",
   "runtimeStatus": "COMPLETED",
