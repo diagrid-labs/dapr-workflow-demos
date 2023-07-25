@@ -268,18 +268,18 @@ graph TD
     Expected result:
 
     ```json
-{
-  "instanceID": "<WORKFLOW_ID>",
-  "workflowName": "MonitorWorkflow",
-  "createdAt": "2023-06-19T13:24:23.004744700Z",
-  "lastUpdatedAt": "2023-06-19T13:24:23.016307900Z",
-  "runtimeStatus": "COMPLETED",
-  "properties": {
-    "dapr.workflow.custom_status": "",
-    "dapr.workflow.input": "10",
-    "dapr.workflow.output": "\"Hey 10\""
-  }
-}
+    {
+    "instanceID": "<WORKFLOW_ID>",
+    "workflowName": "MonitorWorkflow",
+    "createdAt": "2023-06-19T13:24:23.004744700Z",
+    "lastUpdatedAt": "2023-06-19T13:24:23.016307900Z",
+    "runtimeStatus": "COMPLETED",
+    "properties": {
+        "dapr.workflow.custom_status": "",
+        "dapr.workflow.input": "10",
+        "dapr.workflow.output": "\"Hey 10\""
+        }
+    }
     ```
 
 ## Timer sample
@@ -337,16 +337,16 @@ graph TD
 
     ```json
     {
-    "instanceID": "<WORKFLOW_ID>",
-    "workflowName": "TimerWorkflow",
-    "createdAt": "2023-06-19T13:25:59.745344700Z",
-    "lastUpdatedAt": "2023-06-19T13:25:59.768925500Z",
-    "runtimeStatus": "COMPLETED",
-    "properties": {
-        "dapr.workflow.custom_status": "",
-        "dapr.workflow.input": "{\"DateTime\": \"2023-05-29T13:44:00+00:00\", \"Name\": \"World\"}",
-        "dapr.workflow.output": "\"Guten Tag World at 2023-05-29 15:44:00\""
-    }
+        "instanceID": "<WORKFLOW_ID>",
+        "workflowName": "TimerWorkflow",
+        "createdAt": "2023-06-19T13:25:59.745344700Z",
+        "lastUpdatedAt": "2023-06-19T13:25:59.768925500Z",
+        "runtimeStatus": "COMPLETED",
+        "properties": {
+            "dapr.workflow.custom_status": "",
+            "dapr.workflow.input": "{\"DateTime\": \"2023-05-29T13:44:00+00:00\", \"Name\": \"World\"}",
+            "dapr.workflow.output": "\"Guten Tag World at 2023-05-29 15:44:00\""
+        }
     }
     ```
 
