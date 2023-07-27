@@ -352,7 +352,7 @@ graph TB
 
 ## External interaction workflow sample
 
-The External interaction sample is a workflow that will wait with execution of thw workflow until an external event has come in or the time out has expired.
+The External interaction sample is a workflow that will wait with execution of the workflow until an external event has been received or the timeout has expired.
 
 ```mermaid
 graph TB
@@ -418,20 +418,19 @@ graph TB
     }
     ```
 
-    If you wait until the timeout has expired, the `runtimeStatus` will be `FAILED`, with an error message that a task has been cancelled:
+    If you wait until the timeout has expired, the `runtimeStatus` will be `COMPLETED`, with a `custom_status` that the wait for external event is cancelled due to a timeout:
 
     ```json
     {
-        "instanceID": "<WORKFLOW_ID>",
+        "instanceID": "2283569d-5d56-4041-bd63-7df35fa3c879",
         "workflowName": "ExternalInteractionWorkflow",
-        "createdAt": "2023-07-27T11:35:54.446941200Z",
-        "lastUpdatedAt": "2023-07-27T11:36:10.037423900Z",
-        "runtimeStatus": "FAILED",
+        "createdAt": "2023-07-27T14:29:37.084711800Z",
+        "lastUpdatedAt": "2023-07-27T14:29:57.011878800Z",
+        "runtimeStatus": "COMPLETED",
         "properties": {
-            "dapr.workflow.custom_status": "",
-            "dapr.workflow.failure.error_message": "One or more errors occurred. (A task was canceled.)",
-            "dapr.workflow.failure.error_type": "System.AggregateException",
-            "dapr.workflow.input": "\"World\""
+            "dapr.workflow.custom_status": "\"Wait for external event is cancelled due to timeout.\"",
+            "dapr.workflow.input": "\"World\"",
+            "dapr.workflow.output": "\"\""
         }
     }
     ```
