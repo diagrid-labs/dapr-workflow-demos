@@ -358,7 +358,7 @@ The External interaction sample is a workflow that will wait with execution of t
 graph TB
     A[Start]
     B([WaitForExternalEventAsync])
-    C{isApproved}
+    C{IsApproved}
     D[CreateGreetingActivity]
     F[ExternalEvent]
     E[End]
@@ -447,7 +447,7 @@ graph TB
     ```bash
     curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/1234f/raiseEvent/ \
      -H "Content-Type: application/json" \
-     -d '{"isApproved":true}'
+     -d '{"IsApproved":true}'
    ```
 
     ```bash
