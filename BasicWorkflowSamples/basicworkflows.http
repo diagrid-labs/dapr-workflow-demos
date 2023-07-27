@@ -73,3 +73,27 @@ Content-Type: application/json
 ### Get status for Timer workflow
 @workflow_timer_id_response={{wftimerrequest.response.body.instanceID}}
 GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_timer_id_response}}
+
+###
+### Run External interaction workflow
+### 
+// @name externalrequest
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/ExternalInteractionWorkflow/start?instanceID={{workflow_id}}
+Content-Type: application/text/plain
+
+"World"
+
+###
+### Raise an event
+### 
+@workflow_external_id_response={{externalrequest.response.body.instanceID}}
+@event_name=approval-event
+POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_external_id_response}}/raiseEvent/{{event_name}}
+Content-Type: application/json
+
+{
+    "isApproved" : true
+}
+
+### Get status for External interaction workflow
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_external_id_response}}

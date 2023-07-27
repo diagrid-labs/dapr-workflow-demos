@@ -18,7 +18,7 @@ Demos applications that use the Dapr Workflow building block.
 The Hello World Workflow sample is a very basic workflow with just one activity that returns a random greeting. The workflow takes a name as input and returns a greeting with the name as output.
 
 ```mermaid
-graph TD
+graph TB
     A[Start]
     B[CreateGreetingActivity]
     C[End]
@@ -88,7 +88,7 @@ graph TD
 The Chaining Workflow sample is a workflow that chains three activities of the same type `CreateGreetingActivity`, each prepending a random greeting to the input. The output of the activity is used as an input for the next activity in the chain.
 
 ```mermaid
-graph TD
+graph TB
     A[Start]
     B1[CreateGreetingActivity]
     B2[CreateGreetingActivity]
@@ -112,7 +112,7 @@ graph TD
    ```bash
    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ChainingWorkflow/start?instanceID=1234b \
      -H "Content-Type: application/text/plain" \
-     -d '"Marc"'
+     -d '"World"'
     ```
 
     > Note that `1234b` in the URL is the workflow instance ID. This can be any string you want.
@@ -153,7 +153,7 @@ graph TD
 The Fan-out / Fan-in Workflow sample is a workflow that fans out and schedules an activity (`CreateGreetingActivity`) for each element in the input array and waits until all of the activities are completed. The output of the workflow is an array of greetings.
 
 ```mermaid
-graph TD
+graph TB
     A[Start]
     A1([for each name in names])
     B1[CreateGreetingActivity]
@@ -217,12 +217,12 @@ graph TD
     }
     ```
 
-## Monitor sample
+## Monitor workflow sample
 
 The Monitor sample is a workflow with a numeric input (counter) and restarts the workflow (with an updated counter) until the counter reaches 10. The workflow diagram is as follows:
 
 ```mermaid
-graph TD
+graph TB
     A[Start]
     B[CreateGreetingActivity]
     C{counter < 10}
@@ -282,12 +282,12 @@ graph TD
     }
     ```
 
-## Timer sample
+## Timer workflow sample
 
 The Timer sample is a workflow with a TimerWorkflowInput object that contains a name and a date. If the date from the input is larger that the current date, a timer is started and the workflow will only continue once the timer has completed.:
 
 ```mermaid
-graph TD
+graph TB
     A[Start]
     B{input date > current date}
     C([CreateTimer])
@@ -306,15 +306,15 @@ graph TD
     ```bash
     cd BasicWorkflowSamples
     dotnet build
-    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 --resources-path ./Resources dotnet run
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 --resources-path ./ResourcesLocal dotnet run
     ```
 
 2. Start the `TimerWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/TimerWorkflow/start?instanceID=1234e \
-     -H "Content-Type: application/text/plain" \
-     -d '"Marc"'
+     -H "Content-Type: application/json" \
+     -d '{"DateTime": "2023-05-29T13:44:00+00:00","Name":"World"}'
     ```
 
     > Note that `1234e` in the URL is the workflow instance ID. This can be any string you want.
@@ -346,6 +346,127 @@ graph TD
             "dapr.workflow.custom_status": "",
             "dapr.workflow.input": "{\"DateTime\": \"2023-05-29T13:44:00+00:00\", \"Name\": \"World\"}",
             "dapr.workflow.output": "\"Guten Tag World at 2023-05-29 15:44:00\""
+        }
+    }
+    ```
+
+## External interaction workflow sample
+
+The External interaction sample is a workflow that will wait with execution of thw workflow until an external event has come in or the time out has expired.
+
+```mermaid
+graph TB
+    A[Start]
+    B([WaitForExternalEventAsync])
+    C{isApproved}
+    D[CreateGreetingActivity]
+    F[ExternalEvent]
+    E[End]
+    A --> B
+    F --> B
+    B --> C
+    C -->|"[Yes]"| D
+    C -->|"[No / Timeout]"| E
+    D --> E
+```
+
+1. Ensure that the BasicWorkflowSamples app is still running, if not change to the BasicWorkflowSamples directory, build the app, and run the app using the Dapr CLI:
+
+    ```bash
+    cd BasicWorkflowSamples
+    dotnet build
+    dapr run --app-id basic-workflows --app-port 5065 --dapr-http-port 3500 --resources-path ./ResourcesLocal dotnet run
+    ```
+
+2. Start the `ExternalInteractionWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
+
+   ```bash
+   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ExternalInteractionWorkflow/start?instanceID=1234f \
+     -H "Content-Type: application/text/plain" \
+     -d '"World"'
+    ```
+
+    > Note that `1234f` in the URL is the workflow instance ID. This can be any string you want.
+
+    Expected result:
+
+    ```json
+    {
+        "instanceID": "<WORKFLOW_ID>"
+    }
+    ```
+
+3. Check the workflow status via Workflow HTTP API:
+
+    ```bash
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234f
+    ```
+
+    If you check the status within the  specified timeout, the `runtimeStatus` will be `RUNNING`:
+
+    ```json
+    {
+        "instanceID": "<WORKFLOW_ID>",
+        "workflowName": "ExternalInteractionWorkflow",
+        "createdAt": "2023-07-27T11:35:54.446941200Z",
+        "lastUpdatedAt": "2023-07-27T11:35:55.694310900Z",
+        "runtimeStatus": "RUNNING",
+        "properties": {
+            "dapr.workflow.custom_status": "",
+            "dapr.workflow.input": "\"World\""
+        }
+    }
+    ```
+
+    If you wait until the timeout has expired, the `runtimeStatus` will be `FAILED`, with an error message that a task has been cancelled:
+
+    ```json
+    {
+        "instanceID": "<WORKFLOW_ID>",
+        "workflowName": "ExternalInteractionWorkflow",
+        "createdAt": "2023-07-27T11:35:54.446941200Z",
+        "lastUpdatedAt": "2023-07-27T11:36:10.037423900Z",
+        "runtimeStatus": "FAILED",
+        "properties": {
+            "dapr.workflow.custom_status": "",
+            "dapr.workflow.failure.error_message": "One or more errors occurred. (A task was canceled.)",
+            "dapr.workflow.failure.error_type": "System.AggregateException",
+            "dapr.workflow.input": "\"World\""
+        }
+    }
+    ```
+
+4. Now start the workflow again, raise an event within the timeout duration by calling the `raiseEvent` endpoint, and retrieve the status of the workflow. You can use cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
+
+   ```bash
+    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ExternalInteractionWorkflow/start?instanceID=1234f \
+     -H "Content-Type: application/text/plain" \
+     -d '"World"'
+   ```
+
+    ```bash
+    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/1234f/raiseEvent/ \
+     -H "Content-Type: application/json" \
+     -d '{"isApproved":true}'
+   ```
+
+    ```bash
+    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234f
+    ```
+
+    The `runtimeStatus` should now be `COMPLETED`:
+
+    ```json
+    {
+        "instanceID": "<WORKFLOW_ID>",
+        "workflowName": "ExternalInteractionWorkflow",
+        "createdAt": "2023-07-27T11:50:16.526722900Z",
+        "lastUpdatedAt": "2023-07-27T11:50:19.172489800Z",
+        "runtimeStatus": "COMPLETED",
+        "properties": {
+            "dapr.workflow.custom_status": "",
+            "dapr.workflow.input": "\"World\"",
+            "dapr.workflow.output": "\"Hello World\""
         }
     }
     ```
@@ -439,7 +560,7 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
 2. Run the app using the Dapr CLI:
 
     ```bash
-    dapr run --app-id payment --app-port 5063 --dapr-http-port 3501 --resources-path ./Resources dotnet run
+    dapr run --app-id payment --app-port 5063 --dapr-http-port 3501 --resources-path ./ResourcesLocal dotnet run
     ```
 
 ### Run the CheckoutService app
@@ -454,7 +575,7 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
 2. Run the app using the Dapr CLI:
 
     ```bash
-    dapr run --app-id checkout --app-port 5064 --dapr-http-port 3500 --resources-path ./Resources dotnet run
+    dapr run --app-id checkout --app-port 5064 --dapr-http-port 3500 --resources-path ./ResourcesLocal dotnet run
     ```
 
     > Ensure the --app-port is the same as the port specified in the launchSettings.json file.
