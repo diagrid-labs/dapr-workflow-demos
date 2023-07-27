@@ -92,7 +92,7 @@ POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_external_id_response}}/r
 Content-Type: application/json
 
 {
-    "isApproved" : true
+    "IsApproved" : true
 }
 
 ### Get status for External interaction workflow
