@@ -2,7 +2,11 @@
 
 Demos applications that use the Dapr Workflow building block. 
 
-**Read the blog post: [Understanding the Dapr Workflow engine & authoring workflows in .NET](https://www.diagrid.io/blog/authoring-dapr-workflows-in-dotnet)**
+**Read the blog posts:**
+- [Understanding the Dapr Workflow engine & authoring workflows in .NET](https://www.diagrid.io/blog/authoring-dapr-workflows-in-dotnet)
+
+- [An in-depth guide to Dapr workflow patterns in .NET](https://www.diagrid.io/blog/in-depth-guide-to-dapr-workflow-patterns)
+
 
 ## Prerequisites
 
