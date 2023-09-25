@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: basic-wf-app
+  labels:
+    app: basic-wf-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: basic-wf-app
+  template:
+    metadata:
+      labels:
+        app: basic-wf-app
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "basic-wf-app"
+        dapr.io/app-port: "5065"
+        dapr.io/enable-api-logging: "true"
+        dapr.io/sidecar-listen-addresses: "0.0.0.0"
+    spec:
+      containers:
+      - name: basic-wf-app
+        image: ghcr.io/diagrid-labs/dapr-workflow-demos-basic:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: APP_PORT
+          value: "5065"
+        ports:
+        - containerPort: 5065
+        resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi

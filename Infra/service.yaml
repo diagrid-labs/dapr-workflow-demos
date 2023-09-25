@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: basic-wf-app
+  labels:
+    app: basic-wf-app
+spec:
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5065
+      protocol: TCP
+  selector:
+    run:  basic-wf-app
+  type: LoadBalancer

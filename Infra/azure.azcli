@@ -1,0 +1,43 @@
+az group create --name dapr-wf-rg --location westeurope
+
+az aks create --resource-group dapr-wf-rg --name dapr-wf-aks --node-count 2 --enable-addons http_application_routing --generate-ssh-keys
+
+az aks get-credentials --resource-group dapr-wf-rg --name dapr-wf-aks
+
+kubectl cluster-info
+
+kubectl get nodes
+
+dapr init --kubernetes --wait
+
+dapr status -k
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+helm repo update
+
+helm install redis bitnami/redis --set image.tag=6.2
+
+kubectl get pods
+
+kubectl apply -f ./infra/deploy.yaml
+
+kubectl apply -f ./infra/service.yaml 
+
+kubectl rollout status deploy/basic-wf-app
+
+kubectl get svc basic-wf-app
+
+kubectl expose service basic-wf-app-dapr --port=80 --target-port=3500 --name basic-wf-app-dapr-http
+
+kubectl get svc basic-wf-app-dapr-http
+
+// Change the type to LoadBalancer to get a public endpoint
+
+---
+
+docker compose build
+
+docker tag dapr-workflow-demos-workflow-app:latest ghcr.io/diagrid-labs/dapr-workflow-demos-basic:latest
+
+docker push ghcr.io/diagrid-labs/dapr-workflow-demos-basic:latest
