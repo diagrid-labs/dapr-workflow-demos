@@ -59,14 +59,14 @@ Content-Type: application/text/plain
 GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_continue_id_response}}
 
 ###
-### Run Timer workflow
+### Run Timer workflow (use UTC time)
 ### 
 // @name wftimerrequest
 POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/TimerWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/json
 
 {
-    "DateTime": "2023-05-29T13:44:00+00:00",
+    "DateTime": "2023-09-25T13:20:00+00:00",
     "Name": "World"
 }
 
