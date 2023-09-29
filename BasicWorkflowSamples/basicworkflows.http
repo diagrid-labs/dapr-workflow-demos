@@ -31,7 +31,7 @@ GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_chaining_id_response}}
 ###
 ### Run FanOutFanIn workflow
 ### 
-// @name wfchainingrequest
+// @name wffanoutfaningrequest
 POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/json
 
@@ -42,8 +42,8 @@ Content-Type: application/json
 ]
 
 ### Get status for FanOutFanIn workflow
-@workflow_chaining_id_response={{wfchainingrequest.response.body.instanceID}}
-GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_chaining_id_response}}
+@workflow_fanoutfanin_id_response={{wffanoutfaningrequest.response.body.instanceID}}
+GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_fanoutfanin_id_response}}
 
 ###
 ### Run Monitor workflow
@@ -66,7 +66,7 @@ POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/TimerWorkflow/start?instanceID={{wo
 Content-Type: application/json
 
 {
-    "DateTime": "2023-09-25T13:20:00+00:00",
+    "DateTime": "2023-09-25T08:11:00+00:00",
     "Name": "World"
 }
 
