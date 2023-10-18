@@ -116,7 +116,8 @@
             "httpPort": 3500,
             "grpcPort": 50000,
             "type": "dapr",
-            "dependsOn": "BasicWorkflowSamples Build"
+            "resourcesPath" : "${workspaceFolder}/BasicWorkflowSamples/ResourcesLocal",
+            "dependsOn": "BasicWorkflowSamples Build",
         },
         {
             "label": "basic-workflows daprd-down",
@@ -129,7 +130,7 @@
             "appPort": 5064,
             "httpPort": 3500,
             "grpcPort": 50000,
-            "componentsPath" : "./Resources",
+            "resourcesPath" : "./ResourcesLocal",
             "type": "dapr",
             "dependsOn": "CheckoutService Build"
         },
