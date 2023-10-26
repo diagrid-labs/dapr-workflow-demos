@@ -14,9 +14,13 @@ namespace BasicWorkflowSamples
                 nameof(ChainingWorkflow),
                 helloWorld);
 
+            var monitor = await context.CallChildWorkflowAsync<string>(
+                nameof(MonitorWorkflow),
+                0);
+
             var fanOutFanIn = await context.CallChildWorkflowAsync<string[]>(
                 nameof(FanOutFanInWorkflow),
-                new [] { helloWorld, chaining });
+                new [] { helloWorld, chaining, monitor });
 
             return fanOutFanIn;
         }
