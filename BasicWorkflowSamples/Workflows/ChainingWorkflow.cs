@@ -1,5 +1,4 @@
 using Dapr.Workflow;
-using Google.Type;
 
 namespace BasicWorkflowSamples
 {

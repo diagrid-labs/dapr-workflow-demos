@@ -97,3 +97,16 @@ Content-Type: application/json
 
 ### Get status for External interaction workflow
 GET {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_external_id_response}}
+
+###
+### Run ChildWorkflows
+### 
+// @name childworkflowrequest
+POST {{dapr_url}}/v1.0-beta1/workflows/dapr/ChildWorkflows/start?instanceID={{workflow_id}}
+Content-Type: application/text/plain
+
+"World"
+
+### Get status for ChildWorkflows
+@workflow_child_response={{childworkflowrequest.response.body.instanceID}}
+GET {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_child_response}}

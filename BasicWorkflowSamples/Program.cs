@@ -13,6 +13,7 @@ builder.Services.AddDaprWorkflow(options =>
     options.RegisterWorkflow<MonitorWorkflow>();
     options.RegisterWorkflow<TimerWorkflow>();
     options.RegisterWorkflow<ExternalInteractionWorkflow>();
+    options.RegisterWorkflow<ChildWorkflows>();
 
     // These are the activities that get invoked by the workflow(s).
     options.RegisterActivity<CreateGreetingActivity>();
