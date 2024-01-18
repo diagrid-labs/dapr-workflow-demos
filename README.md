@@ -530,7 +530,7 @@ Next to the workflow, this application has an `InventoryController` with the fol
 
 The `InventoryController` also uses Dapr's state management building block.
 
-### Run the PaymentService app
+### Changing the isPaymentSuccess flag
 
 The CheckoutService app relies on the PaymentService app to process the payment. The PaymentService app is a small ASP.NET app that exposes two endpoints:
 
@@ -551,39 +551,35 @@ To configure the PaymentService to return a failed payment response use:
 docker exec dapr_redis redis-cli MSET isPaymentSuccess "false"
 ```
 
-Set the `isPaymentSuccess` config item to "true" and start the PaymentService as follows:
+Set the `isPaymentSuccess` config item to "true" before continuing. 
 
-1. Open a new terminal, change to the PaymentService directory and build the ASP.NET app:
+### Build the services
+
+1. Open a terminal, change to the OrderProcess/PaymentService directory and build the ASP.NET app:
 
     ```bash
-    cd PaymentService
+    cd OrderProcess/PaymentService
     dotnet build
     ```
 
-2. Run the app using the Dapr CLI:
+2. Change to the OrderProcess/CheckoutService directory and build the ASP.NET app:
 
     ```bash
-    dapr run --app-id payment --app-port 5063 --dapr-http-port 3501 --resources-path ./ResourcesLocal dotnet run
-    ```
-
-### Run the CheckoutService app
-
-1. Open a new terminal, change to the CheckoutService directory and build the ASP.NET app:
-
-    ```bash
-    cd CheckoutService
+    cd OrderProcess/CheckoutService
     dotnet build
     ```
 
-2. Run the app using the Dapr CLI:
+### Run the services
+
+1. Using the terminal, change to the OrderProcess directory and start the services using the Dapr CLI with multi-app run:
 
     ```bash
-    dapr run --app-id checkout --app-port 5064 --dapr-http-port 3500 --resources-path ./ResourcesLocal dotnet run
+    dapr run -f .
     ```
 
-    > Ensure the --app-port is the same as the port specified in the launchSettings.json file.
+    > This will start both the CheckoutService and PaymentService using the multi-app run configuration specified in the [dapr.yaml](/OrderProcess/dapr.yaml) file.
 
-3. Check the inventory using cURL, or use the [checkout.http](CheckoutService/checkout.http) file if you're using VSCode with the REST client:
+2. Check the inventory using cURL, or use the [checkout.http](OrderProcess/CheckoutService/checkout.http) file if you're using VSCode with the REST client:
 
     ```bash
     curl -X POST http://localhost:5064/inventory/restock
@@ -595,7 +591,7 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
     curl -X POST http://localhost:5064/inventory/clear
     ```
 
-4. Try ordering 100 paperclips while the inventory is not sufficient. Start the `CheckoutWorkflow` via the Workflow HTTP API:
+3. Try ordering 100 paperclips while the inventory is not sufficient. Start the `CheckoutWorkflow` via the Workflow HTTP API:
 
    ```bash
    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/start?instanceID=1234f \
@@ -615,7 +611,7 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
 
     > Pay attention to the console output. A message will appear that indicates the inventory is insufficient.
 
-5. Check the workflow status via Workflow HTTP API:
+4. Check the workflow status via Workflow HTTP API:
 
     ```bash
     curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234f
@@ -640,7 +636,7 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
 
     > Depending on how quick the status is retrieved after starting the workflow, the `dapr.workflow.runtime_status` could still be `"RUNNING"`. Repeat the GET status request until the status is `"COMPLETED"`.
 
-6. Restock the inventory:
+5. Restock the inventory:
 
     ```bash
     curl -X POST http://localhost:5064/inventory/restock
@@ -648,7 +644,7 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
 
     Expected result: `HTTP 200 OK`
 
-7. Try ordering paperclips again, now within the limits of the inventory. Start the `CheckoutWorkflow` via the Workflow HTTP API:
+6. Try ordering paperclips again, now within the limits of the inventory. Start the `CheckoutWorkflow` via the Workflow HTTP API:
 
     ```bash
     curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/start?instanceID=1234g \
@@ -668,7 +664,7 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
 
     > Pay attention to the console output. Messages will appear that indicate the inventory is sufficient and payment has been processed successfully.
 
-8. Check the workflow status via Workflow HTTP API:
+7. Check the workflow status via Workflow HTTP API:
 
     ```bash
     curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234g
@@ -691,7 +687,7 @@ Set the `isPaymentSuccess` config item to "true" and start the PaymentService as
     }
     ```
 
-9. Inspect the logs in ZipKin: [`localhost:9411/zipkin`](http://localhost:9411/zipkin). Find the entry marked `checkout:create_orchestration||checkoutworkflow` and show the details. You'll now see a timeline of the workflow at the top, and the activities underneath.
+8. Inspect the logs in ZipKin: [`localhost:9411/zipkin`](http://localhost:9411/zipkin). Find the entry marked `checkout:create_orchestration||checkoutworkflow` and show the details. You'll now see a timeline of the workflow at the top, and the activities underneath.
 
     ![Checkout workflow in Zipkin](images/checkout_zipkin.png)
 
