@@ -1,0 +1,29 @@
+name: .NET Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '8.0.x' # replace with your .NET version
+
+    - name: Restore dependencies
+      run: dotnet restore /OrderProcess
+
+    - name: Build
+      run: dotnet build --no-restore /OrderProcess
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal /OrderProcess
