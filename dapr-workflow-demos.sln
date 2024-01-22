@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.002.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PaymentService", "PaymentService\PaymentService.csproj", "{31C0C480-0BD8-4B99-8486-8C6737A1BE26}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CheckoutService", "CheckoutService\CheckoutService.csproj", "{EDC03A4D-ADD5-408D-8EB2-E4C2C5C9BEF4}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BasicWorkflowSamples", "BasicWorkflowSamples\BasicWorkflowSamples.csproj", "{D545B091-4B6E-4592-9523-D4013551B1F1}"
 EndProject
 Global
@@ -15,14 +11,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{31C0C480-0BD8-4B99-8486-8C6737A1BE26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{31C0C480-0BD8-4B99-8486-8C6737A1BE26}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{31C0C480-0BD8-4B99-8486-8C6737A1BE26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{31C0C480-0BD8-4B99-8486-8C6737A1BE26}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EDC03A4D-ADD5-408D-8EB2-E4C2C5C9BEF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EDC03A4D-ADD5-408D-8EB2-E4C2C5C9BEF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EDC03A4D-ADD5-408D-8EB2-E4C2C5C9BEF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EDC03A4D-ADD5-408D-8EB2-E4C2C5C9BEF4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D545B091-4B6E-4592-9523-D4013551B1F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D545B091-4B6E-4592-9523-D4013551B1F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D545B091-4B6E-4592-9523-D4013551B1F1}.Release|Any CPU.ActiveCfg = Release|Any CPU

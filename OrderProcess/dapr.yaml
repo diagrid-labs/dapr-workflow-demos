@@ -1,0 +1,18 @@
+version: 1
+apps:
+  - appID: checkout-service
+    appDirPath: /CheckoutService
+    appPort: 5064
+    daprHTTPPort: 3500
+    command: ["dotnet", "run"]
+    appLogDestination: console
+    daprdLogDestination: console
+    resourcesPath: /Resources
+  - appID: payment-service
+    appDirPath: /PaymentService
+    appPort: 5063
+    daprHTTPPort: 3501
+    command: ["dotnet", "run"]
+    appLogDestination: console
+    daprdLogDestination: console
+    resourcesPath: /Resources
