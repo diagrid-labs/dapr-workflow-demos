@@ -4,4 +4,11 @@ updates:
     directory: "/OrderProcess"
     schedule:
       interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+  - package-ecosystem: "nuget"
+    directory: "/BasicWorkflowSamples"
+    schedule:
+      interval: "weekly"
+      day: "monday"
     open-pull-requests-limit: 10
