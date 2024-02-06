@@ -8,6 +8,7 @@ namespace CheckoutService.Activities
     {
         private readonly ILogger _logger;
         private readonly DaprClient _client;
+        const string INVOKE_APP = "payment-service";
 
         public ProcessPaymentActivity(ILoggerFactory loggerFactory, DaprClient client)
         {
@@ -26,7 +27,7 @@ namespace CheckoutService.Activities
             // Simulate slow processing
             await Task.Delay(TimeSpan.FromSeconds(3));
 
-            var methodRequest = _client.CreateInvokeMethodRequest(HttpMethod.Post, "payment", "pay", request);
+            var methodRequest = _client.CreateInvokeMethodRequest(HttpMethod.Post, INVOKE_APP, "pay", request);
             try
             {
                 await _client.InvokeMethodAsync(methodRequest);

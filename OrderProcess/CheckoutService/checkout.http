@@ -24,4 +24,5 @@ Content-Type: application/json
 
 ### Get status
 @workflow_id_response={{wfrequest.response.body.instanceID}}
+
 GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_id_response}}
