@@ -1,4 +1,5 @@
 @app_url=http://localhost:5064
+@dapr_url=https://http-prj21223.api.cloud.diagrid.io
 
 ### Get inventory
 GET {{app_url}}/inventory
@@ -10,19 +11,44 @@ POST {{app_url}}/inventory/restock
 DELETE {{app_url}}/inventory
 
 ### Run workflow
-@dapr_url=http://localhost:3500 
 @workflow_id={{$guid}}
 
 // @name wfrequest
-POST {{dapr_url}}/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/start?instanceID={{workflow_id}}
+POST {{dapr_url}}/v1.0-beta1/workflows/dapr/CheckoutWorkflow/start?instanceID={{workflow_id}}
+Content-Type: application/json
+Dapr-Api-Token: diagrid://v1/7f40de76-9763-4630-b2f2-744a6f14ce99/21223/kendall-test/checkout-service/65508da8-2d2c-49c7-b02d-acacaac0c249
+
+{
+    "Name": "Computers",
+    "Quantity": 1
+}
+
+
+### Get status
+@workflow_id_response={{wfrequest.response.body.instanceID}}
+GET {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_id_response}}
+Dapr-Api-Token: diagrid://v1/7f40de76-9763-4630-b2f2-744a6f14ce99/21223/kendall-test/checkout-service/65508da8-2d2c-49c7-b02d-acacaac0c249
+
+
+### Terminate
+POST {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_id_response}}/terminate
+Dapr-Api-Token: diagrid://v1/7f40de76-9763-4630-b2f2-744a6f14ce99/21223/kendall-test/checkout-service/65508da8-2d2c-49c7-b02d-acacaac0c249
+
+### Pause
+POST {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_id_response}}/pause
+Dapr-Api-Token: diagrid://v1/7f40de76-9763-4630-b2f2-744a6f14ce99/21223/kendall-test/checkout-service/65508da8-2d2c-49c7-b02d-acacaac0c249
+
+
+### Checkout
+
+POST {{app_url}}/checkout
 Content-Type: application/json
 
 {
     "Name": "Paperclips",
-    "Quantity": 25
+    "Quantity": 6
 }
 
-### Get status
-@workflow_id_response={{wfrequest.response.body.instanceID}}
+### Get Checkout state 
 
-GET {{dapr_url}}/v1.0-alpha1/workflows/dapr/{{workflow_id_response}}
+GET {{app_url}}/checkout?instanceId=c1bceff17518496c9c8ae7b28774eda0

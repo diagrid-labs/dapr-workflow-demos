@@ -5,14 +5,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 var app = builder.Build();
 
-// Dapr uses a random port for gRPC by default. If we don't know what that port
-// is (because this app was started separate from dapr), then assume 50001.
-if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("DAPR_GRPC_PORT")))
-{
-    Environment.SetEnvironmentVariable("DAPR_GRPC_PORT", "50001");
-}
-
 var daprClient = new DaprClientBuilder().Build();
+
 const string CONFIG_STORE_NAME = "configstore";
 const string configKey = "isPaymentSuccess";
 var configItems = new List<string> { configKey };

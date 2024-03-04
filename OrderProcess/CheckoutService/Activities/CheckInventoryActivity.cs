@@ -8,7 +8,8 @@ namespace CheckoutService.Activities
     {
         readonly ILogger _logger;
         readonly DaprClient _client;
-        static readonly string storeName = "statestore";
+        string storeName = Environment.GetEnvironmentVariable("INVENTORY_STORE") ?? "statestore";
+
 
         public CheckInventoryActivity(ILoggerFactory loggerFactory, DaprClient client)
         {
@@ -19,7 +20,7 @@ namespace CheckoutService.Activities
         public override async Task<InventoryResult> RunAsync(WorkflowActivityContext context, InventoryRequest req)
         {
             _logger.LogInformation(
-                "Checking inventory for order '{requestId}' of {quantity} {name}",
+                "Checking inventory for order '{requestId}' of {quantity} {itemName}",
                 req.RequestId,
                 req.Quantity,
                 req.ItemName);
@@ -37,17 +38,17 @@ namespace CheckoutService.Activities
             }
 
             _logger.LogInformation(
-                "There are {quantity} {name} available for purchase",
+                "There are {quantity} {itemName} available for purchase",
                 product.Quantity,
                 product.Name);
 
             var totalCost = product.PerItemCost * req.Quantity;
-            // See if there're enough items to purchase
+            // See if there are enough items to purchase
             if (product.Quantity >= req.Quantity)
             {
                 // Simulate slow processing
                 await Task.Delay(TimeSpan.FromSeconds(3));
-                
+
                 return new InventoryResult(true, product, totalCost);
             }
 

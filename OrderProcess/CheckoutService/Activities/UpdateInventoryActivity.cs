@@ -6,7 +6,7 @@ namespace CheckoutService.Activities
 {
     class UpdateInventoryActivity : WorkflowActivity<InventoryRequest, object?>
     {
-        static readonly string storeName = "statestore";
+        string storeName = Environment.GetEnvironmentVariable("INVENTORY_STORE") ?? "statestore";
         readonly ILogger _logger;
         readonly DaprClient _client;
 

@@ -1,10 +1,11 @@
 @app_url=http://localhost:5063
-@dapr_http_url=http://localhost:3501
+@dapr_http_url=https://http-prj21223.api.cloud.diagrid.io
 
 
 ### Pay via Dapr endpoint
-POST {{dapr_http_url}}/v1.0/invoke/payment/method/pay
+POST {{dapr_http_url}}/v1.0/invoke/payment-service/method/pay
 Content-Type: application/json
+Dapr-Api-Token: diagrid://v1/7f40de76-9763-4630-b2f2-744a6f14ce99/21223/kendall-test/payment-service/a96df8cb-ecdd-43fd-9c6b-8a2dc766b73e
 
 {
     "requestId": "{{$guid}}",
