@@ -3,18 +3,12 @@ using Dapr.Workflow;
 
 namespace CheckoutService.Activities
 {
-    public class NotifyActivity : WorkflowActivity<Notification, object?>
+    public class NotifyActivity(ILoggerFactory loggerFactory) : WorkflowActivity<Notification, object?>
     {
-        private readonly ILogger _logger;
-
-        public NotifyActivity(ILoggerFactory loggerFactory)
-        {
-            _logger = loggerFactory.CreateLogger<NotifyActivity>();
-        }
-
         public override Task<object?> RunAsync(WorkflowActivityContext context, Notification notification)
         {
-            _logger.LogInformation(notification.Message);
+            var logger = loggerFactory.CreateLogger<NotifyActivity>();
+            logger.LogInformation(notification.Message);
 
             return Task.FromResult<object?>(null);
         }

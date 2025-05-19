@@ -6,18 +6,10 @@ namespace CheckoutService.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class InventoryController : ControllerBase
+public class InventoryController(ILogger<InventoryController> logger, DaprClient client) : ControllerBase
 {
-    private readonly ILogger<InventoryController> _logger;
-    private readonly DaprClient _client;
     private static readonly string storeName = "statestore";
     private readonly static string[] itemKeys = new [] {"Paperclips", "Cars", "Computers"};
-
-    public InventoryController(ILogger<InventoryController> logger, DaprClient client)
-    {
-        _logger = logger;
-        _client = client;
-    }
 
     [HttpGet]
     public async Task<IActionResult> GetInventory()
@@ -26,7 +18,7 @@ public class InventoryController : ControllerBase
 
         foreach (var itemKey in itemKeys)
         {
-             var item = await _client.GetStateAsync<InventoryItem>(storeName, itemKey.ToLowerInvariant());
+             var item = await client.GetStateAsync<InventoryItem>(storeName, itemKey.ToLowerInvariant());
              inventory.Add(item);
         }
 
@@ -45,10 +37,10 @@ public class InventoryController : ControllerBase
 
         foreach (var item in baseInventory)
         {
-            await _client.SaveStateAsync(storeName, item.Name.ToLowerInvariant(), item);
+            await client.SaveStateAsync(storeName, item.Name.ToLowerInvariant(), item);
         }
 
-        _logger.LogInformation("Inventory Restocked!");
+        logger.LogInformation("Inventory Restocked!");
     }
 
     [HttpDelete]
@@ -63,9 +55,9 @@ public class InventoryController : ControllerBase
 
         foreach (var item in baseInventory)
         {
-            await _client.SaveStateAsync(storeName, item.Name.ToLowerInvariant(), item);
+            await client.SaveStateAsync(storeName, item.Name.ToLowerInvariant(), item);
         }
 
-        _logger.LogInformation("Cleared inventory!");
+        logger.LogInformation("Cleared inventory!");
     }
 }

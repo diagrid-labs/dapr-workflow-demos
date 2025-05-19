@@ -4,21 +4,12 @@ using Dapr.Workflow;
 
 namespace CheckoutService.Activities
 {
-    public class ProcessPaymentActivity : WorkflowActivity<PaymentRequest, PaymentResponse>
+    public class ProcessPaymentActivity(HttpClient httpClient, ILoggerFactory loggerFactory, DaprClient client) : WorkflowActivity<PaymentRequest, PaymentResponse>
     {
-        private readonly ILogger _logger;
-        private readonly DaprClient _client;
-        const string INVOKE_APP = "payment-service";
-
-        public ProcessPaymentActivity(ILoggerFactory loggerFactory, DaprClient client)
-        {
-            _logger = loggerFactory.CreateLogger<ProcessPaymentActivity>();
-            _client = client;
-        }
-
         public override async Task<PaymentResponse> RunAsync(WorkflowActivityContext context, PaymentRequest request)
         {
-            _logger.LogInformation(
+            var logger = loggerFactory.CreateLogger<ProcessPaymentActivity>();
+            logger.LogInformation(
                 "Calling PaymentService for: {requestId} {name} at ${totalCost}",
                 request.RequestId,
                 request.Name,
@@ -27,11 +18,12 @@ namespace CheckoutService.Activities
             // Simulate slow processing
             await Task.Delay(TimeSpan.FromSeconds(3));
 
-            var methodRequest = _client.CreateInvokeMethodRequest(HttpMethod.Post, INVOKE_APP, "pay", request);
             try
             {
-                await _client.InvokeMethodAsync(methodRequest);
-                _logger.LogInformation(
+                const string INVOKE_APP = "payment-service";
+                var httpClient = DaprClient.CreateInvokeHttpClient(appId: INVOKE_APP);
+                var httpResponse = await httpClient.PostAsJsonAsync("/pay", request);
+                logger.LogInformation(
                     "Payment for request ID '{requestId}' processed successfully",
                     request.RequestId);
 
@@ -47,7 +39,7 @@ namespace CheckoutService.Activities
                 }
 
                 // Any other exception is treated as a failed payment.
-                _logger.LogWarning(
+                logger.LogWarning(
                     "Payment for request ID '{requestId}' failed",
                     request.RequestId);
 

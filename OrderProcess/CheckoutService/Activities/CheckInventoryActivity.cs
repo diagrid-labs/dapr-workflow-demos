@@ -4,28 +4,21 @@ using CheckoutService.Models;
 
 namespace CheckoutService.Activities
 {
-    public class CheckInventoryActivity : WorkflowActivity<InventoryRequest, InventoryResult>
+    public class CheckInventoryActivity(ILoggerFactory loggerFactory, DaprClient client) : WorkflowActivity<InventoryRequest, InventoryResult>
     {
-        readonly ILogger _logger;
-        readonly DaprClient _client;
         static readonly string storeName = "statestore";
-
-        public CheckInventoryActivity(ILoggerFactory loggerFactory, DaprClient client)
-        {
-            _logger = loggerFactory.CreateLogger<CheckInventoryActivity>();
-            _client = client;
-        }
 
         public override async Task<InventoryResult> RunAsync(WorkflowActivityContext context, InventoryRequest req)
         {
-            _logger.LogInformation(
+            var logger = loggerFactory.CreateLogger<CheckInventoryActivity>();
+            logger.LogInformation(
                 "Checking inventory for order '{requestId}' of {quantity} {name}",
                 req.RequestId,
                 req.Quantity,
                 req.ItemName);
 
             // Ensure that the store has items
-            var product = await _client.GetStateAsync<InventoryItem>(
+            var product = await client.GetStateAsync<InventoryItem>(
                 storeName,
                 req.ItemName.ToLowerInvariant());
 
@@ -36,7 +29,7 @@ namespace CheckoutService.Activities
                 return new InventoryResult(false, null, 0);
             }
 
-            _logger.LogInformation(
+            logger.LogInformation(
                 "There are {quantity} {name} available for purchase",
                 product.Quantity,
                 product.Name);

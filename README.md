@@ -10,9 +10,9 @@ Demos applications that use the Dapr Workflow building block.
 
 ## Prerequisites
 
-1. [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+1. [.NET 9 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
 2. [Dapr CLI](https://docs.dapr.io/getting-started/install-dapr-cli/)
-   - Ensure that you're using v1.11 (or higher) of the Dapr runtime and the CLI, since there have been [breaking changes](https://github.com/dapr/dapr/pull/6218) to the Workflow API from v1.10 to v1.11.
+   - Ensure that you're using v1.15 (or higher) of the Dapr runtime and the CLI.
 3. A REST client, such as [cURL](https://curl.se/), or the VSCode [REST client extension](https://marketplace.visualstudio.com/items?itemName=humao.rest-client).
 
     > The VSCode REST client is configured as a recommended extension when opening this repo in VSCode.
@@ -49,7 +49,7 @@ graph TB
 3. Start the `HelloWorldWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/HelloWorldWorkflow/start?instanceID=1234a \
+   curl -i -X POST http://localhost:3500/v1.0/workflows/dapr/HelloWorldWorkflow/start?instanceID=1234a \
      -H "Content-Type: application/text/plain" \
      -d '"World"'
     ```
@@ -67,7 +67,7 @@ graph TB
 4. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234a
+    curl -i -X GET http://localhost:3500/v1.0/workflows/dapr/1234a
     ```
 
     Expected result:
@@ -114,7 +114,7 @@ graph TB
 2. Start the `ChainingWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ChainingWorkflow/start?instanceID=1234b \
+   curl -i -X POST http://localhost:3500/v1.0/workflows/dapr/ChainingWorkflow/start?instanceID=1234b \
      -H "Content-Type: application/text/plain" \
      -d '"World"'
     ```
@@ -132,7 +132,7 @@ graph TB
 3. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234b
+    curl -i -X GET http://localhost:3500/v1.0/workflows/dapr/1234b
     ```
 
     Expected result:
@@ -183,7 +183,7 @@ graph TB
 2. Start the `FanOutFanInWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/FanOutFanInWorkflow/start?instanceID=1234c \
+   curl -i -X POST http://localhost:3500/v1.0/workflows/dapr/FanOutFanInWorkflow/start?instanceID=1234c \
      -H "Content-Type: application/json" \
      -d '["Amsterdam", "Chicago", "New York"]'
     ```
@@ -201,7 +201,7 @@ graph TB
 3. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234c
+    curl -i -X GET http://localhost:3500/v1.0/workflows/dapr/1234c
     ```
 
     Expected result:
@@ -248,7 +248,7 @@ graph TB
 2. Start the `MonitorWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/MonitorWorkflow/start?instanceID=1234d \
+   curl -i -X POST http://localhost:3500/v1.0/workflows/dapr/MonitorWorkflow/start?instanceID=1234d \
      -H "Content-Type: application/text/plain" \
      -d '0'
     ```
@@ -266,7 +266,7 @@ graph TB
 3. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234d
+    curl -i -X GET http://localhost:3500/v1.0/workflows/dapr/1234d
     ```
 
     Expected result:
@@ -316,7 +316,7 @@ graph TB
 2. Start the `TimerWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/TimerWorkflow/start?instanceID=1234e \
+   curl -i -X POST http://localhost:3500/v1.0/workflows/dapr/TimerWorkflow/start?instanceID=1234e \
      -H "Content-Type: application/json" \
      -d '{"DateTime": "2023-05-29T13:44:00+00:00","Name":"World"}'
     ```
@@ -334,7 +334,7 @@ graph TB
 3. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234e
+    curl -i -X GET http://localhost:3500/v1.0/workflows/dapr/1234e
     ```
 
     Expected result:
@@ -385,7 +385,7 @@ graph TB
 2. Start the `ExternalInteractionWorkflow` via the Workflow HTTP API using cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ExternalInteractionWorkflow/start?instanceID=1234f \
+   curl -i -X POST http://localhost:3500/v1.0/workflows/dapr/ExternalInteractionWorkflow/start?instanceID=1234f \
      -H "Content-Type: application/text/plain" \
      -d '"World"'
     ```
@@ -403,7 +403,7 @@ graph TB
 3. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234f
+    curl -i -X GET http://localhost:3500/v1.0/workflows/dapr/1234f
     ```
 
     If you check the status within the  specified timeout, the `runtimeStatus` will be `RUNNING`:
@@ -442,19 +442,19 @@ graph TB
 4. Now start the workflow again, raise an event within the timeout duration by calling the `raiseEvent` endpoint, and retrieve the status of the workflow. You can use cURL, or use the [basicworkflows.http](BasicWorkflowSamples/basicworkflows.http) file if you're using VSCode with the REST client:
 
    ```bash
-    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/ExternalInteractionWorkflow/start?instanceID=1234f \
+    curl -i -X POST http://localhost:3500/v1.0/workflows/dapr/ExternalInteractionWorkflow/start?instanceID=1234f \
      -H "Content-Type: application/text/plain" \
      -d '"World"'
    ```
 
     ```bash
-    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/1234f/raiseEvent/ \
+    curl -i -X POST http://localhost:3500/v1.0/workflows/dapr/1234f/raiseEvent/ \
      -H "Content-Type: application/json" \
      -d '{"IsApproved":true}'
    ```
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234f
+    curl -i -X GET http://localhost:3500/v1.0/workflows/dapr/1234f
     ```
 
     The `runtimeStatus` should now be `COMPLETED`:
@@ -594,7 +594,7 @@ Set the `isPaymentSuccess` config item to "true" before continuing.
 3. Try ordering 100 paperclips while the inventory is not sufficient. Start the `CheckoutWorkflow` via the Workflow HTTP API:
 
    ```bash
-   curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/start?instanceID=1234f \
+   curl -i -X POST http://localhost:3500/v1.0/workflows/dapr/CheckoutWorkflow/start?instanceID=1234f \
      -H "Content-Type: application/json" \
      -d '{"Name": "Paperclips", "Quantity": 100}'
     ```
@@ -614,7 +614,7 @@ Set the `isPaymentSuccess` config item to "true" before continuing.
 4. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234f
+    curl -i -X GET http://localhost:3500/v1.0/workflows/dapr/1234f
     ```
 
     Expected result:
@@ -647,7 +647,7 @@ Set the `isPaymentSuccess` config item to "true" before continuing.
 6. Try ordering paperclips again, now within the limits of the inventory. Start the `CheckoutWorkflow` via the Workflow HTTP API:
 
     ```bash
-    curl -i -X POST http://localhost:3500/v1.0-alpha1/workflows/dapr/CheckoutWorkflow/start?instanceID=1234g \
+    curl -i -X POST http://localhost:3500/v1.0/workflows/dapr/CheckoutWorkflow/start?instanceID=1234g \
      -H "Content-Type: application/json" \
      -d '{"Name": "Paperclips", "Quantity": 25}'
     ```
@@ -667,7 +667,7 @@ Set the `isPaymentSuccess` config item to "true" before continuing.
 7. Check the workflow status via Workflow HTTP API:
 
     ```bash
-    curl -i -X GET http://localhost:3500/v1.0-alpha1/workflows/dapr/1234g
+    curl -i -X GET http://localhost:3500/v1.0/workflows/dapr/1234g
     ```
 
     Expected result:

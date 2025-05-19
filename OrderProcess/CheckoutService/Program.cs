@@ -1,3 +1,4 @@
+using Dapr.Client;
 using Dapr.Workflow;
 using CheckoutService.Activities;
 using CheckoutService.Workflows;
@@ -5,7 +6,6 @@ using CheckoutService.Workflows;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-
 builder.Services.AddDaprWorkflow(options =>
 {
     // Note that it's also possible to register a lambda function as the workflow

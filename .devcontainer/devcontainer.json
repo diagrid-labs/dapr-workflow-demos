@@ -3,10 +3,9 @@
 {
 	"name": "Dapr Workflow Demo",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/dotnet:1-8.0-bookworm",
+	"image": "mcr.microsoft.com/devcontainers/dotnet:9.0",
 	"features": {
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
-		"ghcr.io/dapr/cli/dapr-cli:0": {}
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
 	},
 
 	// Features to add to the dev container. More info: https://containers.dev/features.

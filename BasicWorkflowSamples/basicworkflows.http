@@ -5,7 +5,7 @@
 ### Run Hello World workflow
 ###
 // @name wfrequest
-POST {{dapr_url}}/v1.0-beta1/workflows/dapr/HelloWorldWorkflow/start?instanceID={{workflow_id}}
+POST {{dapr_url}}/v1.0/workflows/dapr/HelloWorldWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/text/plain
 
 "World"
@@ -13,26 +13,26 @@ Content-Type: application/text/plain
 
 ### Get status for Hello World workflow
 @workflow_helloworld_id_response={{wfrequest.response.body.instanceID}}
-GET {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_helloworld_id_response}}
+GET {{dapr_url}}/v1.0/workflows/dapr/{{workflow_helloworld_id_response}}
 
 ###
 ### Run Chaining workflow
 ### 
 // @name wfchainingrequest
-POST {{dapr_url}}/v1.0-beta1/workflows/dapr/ChainingWorkflow/start?instanceID={{workflow_id}}
+POST {{dapr_url}}/v1.0/workflows/dapr/ChainingWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/text/plain
 
 "World"
 
 ### Get status for Chaining workflow
 @workflow_chaining_id_response={{wfchainingrequest.response.body.instanceID}}
-GET {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_chaining_id_response}}
+GET {{dapr_url}}/v1.0/workflows/dapr/{{workflow_chaining_id_response}}
 
 ###
 ### Run FanOutFanIn workflow
 ### 
 // @name wffanoutfaningrequest
-POST {{dapr_url}}/v1.0-beta1/workflows/dapr/FanOutFanInWorkflow/start?instanceID={{workflow_id}}
+POST {{dapr_url}}/v1.0/workflows/dapr/FanOutFanInWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/json
 
 [
@@ -43,26 +43,26 @@ Content-Type: application/json
 
 ### Get status for FanOutFanIn workflow
 @workflow_fanoutfanin_id_response={{wffanoutfaningrequest.response.body.instanceID}}
-GET {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_fanoutfanin_id_response}}
+GET {{dapr_url}}/v1.0/workflows/dapr/{{workflow_fanoutfanin_id_response}}
 
 ###
 ### Run Monitor workflow
 ### 
 // @name wfcontinuerequest
-POST {{dapr_url}}/v1.0-beta1/workflows/dapr/MonitorWorkflow/start?instanceID={{workflow_id}}
+POST {{dapr_url}}/v1.0/workflows/dapr/MonitorWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/text/plain
 
 0
 
 ### Get status for Monitor workflow
 @workflow_continue_id_response={{wfcontinuerequest.response.body.instanceID}}
-GET {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_continue_id_response}}
+GET {{dapr_url}}/v1.0/workflows/dapr/{{workflow_continue_id_response}}
 
 ###
 ### Run Timer workflow (use UTC time)
 ### 
 // @name wftimerrequest
-POST {{dapr_url}}/v1.0-beta1/workflows/dapr/TimerWorkflow/start?instanceID={{workflow_id}}
+POST {{dapr_url}}/v1.0/workflows/dapr/TimerWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/json
 
 {
@@ -72,13 +72,13 @@ Content-Type: application/json
 
 ### Get status for Timer workflow
 @workflow_timer_id_response={{wftimerrequest.response.body.instanceID}}
-GET {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_timer_id_response}}
+GET {{dapr_url}}/v1.0/workflows/dapr/{{workflow_timer_id_response}}
 
 ###
 ### Run External interaction workflow
 ### 
 // @name externalrequest
-POST {{dapr_url}}/v1.0-beta1/workflows/dapr/ExternalInteractionWorkflow/start?instanceID={{workflow_id}}
+POST {{dapr_url}}/v1.0/workflows/dapr/ExternalInteractionWorkflow/start?instanceID={{workflow_id}}
 Content-Type: application/text/plain
 
 "World"
@@ -88,7 +88,7 @@ Content-Type: application/text/plain
 ### 
 @workflow_external_id_response={{externalrequest.response.body.instanceID}}
 @event_name=approval-event
-POST {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_external_id_response}}/raiseEvent/{{event_name}}
+POST {{dapr_url}}/v1.0/workflows/dapr/{{workflow_external_id_response}}/raiseEvent/{{event_name}}
 Content-Type: application/json
 
 {
@@ -96,17 +96,17 @@ Content-Type: application/json
 }
 
 ### Get status for External interaction workflow
-GET {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_external_id_response}}
+GET {{dapr_url}}/v1.0/workflows/dapr/{{workflow_external_id_response}}
 
 ###
 ### Run ChildWorkflows
 ### 
 // @name childworkflowrequest
-POST {{dapr_url}}/v1.0-beta1/workflows/dapr/ChildWorkflows/start?instanceID={{workflow_id}}
+POST {{dapr_url}}/v1.0/workflows/dapr/ChildWorkflows/start?instanceID={{workflow_id}}
 Content-Type: application/text/plain
 
 "World"
 
 ### Get status for ChildWorkflows
 @workflow_child_response={{childworkflowrequest.response.body.instanceID}}
-GET {{dapr_url}}/v1.0-beta1/workflows/dapr/{{workflow_child_response}}
+GET {{dapr_url}}/v1.0/workflows/dapr/{{workflow_child_response}}
